@@ -68,12 +68,9 @@ a { color: var(--accent); }
   -webkit-text-stroke: .12em var(--logo-halo); paint-order: stroke fill;
 }
 .logo-word b { color: var(--accent); }
-/* "TI" con la bandiera del Ticino (rosso sopra, blu sotto); senza alone, che coprirebbe i bordi delle lettere */
-.logo-ti {
-  background: linear-gradient(#e2231a 52%, #0f5bb5 52%);
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent; -webkit-text-stroke: 0;
-}
+/* "TI" con i colori della bandiera del Ticino: T rossa, I blu */
+.logo-ti-r { color: #e2231a; }
+.logo-ti-b { color: #0f5bb5; }
 .nav nav { display: flex; gap: 22px; margin-left: auto; }
 .nav nav a { color: var(--muted); text-decoration: none; font-weight: 500; }
 .nav nav a:hover { color: var(--text); }
