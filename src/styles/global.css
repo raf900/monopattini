@@ -198,6 +198,9 @@ a { color: var(--accent); }
 .status-arrivo { background: #ea7a0c; }
 .status-esaurito { background: #dc2626; }
 .scooter-link { color: inherit; text-decoration: none; }
+/* Annunci di privati su tutti.ch: foto vera a tutto riquadro ed etichetta con il logo di tutti */
+.scooter-img.tutti-photo img { inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+.tutti-badge { position: absolute; top: 10px; left: 10px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #0d1626; font-size: .75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; box-shadow: 0 4px 12px -4px rgb(0 0 0 / .35); }
 .scooter-link:hover { color: var(--accent); }
 /* Pagina Usato: filtri a sinistra, elenco a destra */
 .shop { display: grid; grid-template-columns: 300px 1fr; grid-template-areas: '. bar' 'filters main'; gap: 0 28px; align-items: start; }

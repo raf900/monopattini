@@ -1,14 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 import ScooterMark from './ScooterMark.astro';
-import { scooters, statusLabel, chf } from '../data/site.js';
+import { scooters, tuttiAds, statusLabel, chf } from '../data/site.js';
 import { photo } from '../data/photos.js';
 
 // exclude: slug da non mostrare (es. il monopattino della pagina corrente)
 // famiglia: mostra solo i monopattini con la stessa struttura (pagina del monopattino)
 // onlyAvailable: mostra solo quelli 'disponibile' (usato in home)
 // sortable: mostra "Ordina per" e i filtri a cursore (pagina Usato)
-const { exclude, famiglia, onlyAvailable = false, sortable = false } = Astro.props;
+// withTutti: aggiunge in fondo le card degli annunci di privati su tutti.ch (si aprono su tutti.ch)
+const { exclude, famiglia, onlyAvailable = false, sortable = false, withTutti = false } = Astro.props;
+const tutti = withTutti ? tuttiAds : [];
 // numero dalla velocità su strade private ("45 km/h" → 45); se manca, quella legale
 const topSpeed = (s) => parseInt(s.velocitaMax) || s.velocita || 0;
 // grandezza ruote dalla scheda tecnica ('8,5" con camera d’aria' → 8.5)
@@ -19,8 +21,9 @@ const list = scooters.filter((s) => s.slug !== exclude && (!famiglia || s.famigl
 
 // Filtri a cursore: min e max presi dai monopattini in elenco (un filtro senza differenze non viene mostrato)
 const values = (fn) => list.map(fn).filter((v) => typeof v === 'number' && !isNaN(v));
+const prices = [...values((s) => s.price), ...tutti.map((a) => a.price)];
 const filters = [
-  { key: 'price', label: 'Prezzo', fmt: (v) => `CHF ${v}`, step: 10, vals: values((s) => s.price) },
+  { key: 'price', label: 'Prezzo', fmt: (v) => `CHF ${v}`, step: 10, vals: prices },
   { key: 'year', label: 'Anno', fmt: (v) => `${v}`, step: 1, vals: values((s) => s.year) },
   { key: 'km', label: 'Km percorsi', fmt: (v) => `${v.toLocaleString('de-CH')} km`, step: 50, vals: values((s) => s.km) },
   { key: 'autonomia', label: 'Autonomia', fmt: (v) => `${v} km`, step: 5, vals: values(autonomy) },
@@ -37,7 +40,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
   {sortable && list.length > 1 && (
     <div class="sort-bar">
       <button type="button" class="filters-toggle" aria-controls="filtri" aria-expanded="false" data-filters-toggle>Filtri</button>
-      <span class="sort-count" data-count>{list.length} monopattini</span>
+      <span class="sort-count" data-count>{list.length + tutti.length} monopattini</span>
       <button type="button" class="cmp-toggle" aria-pressed="false" data-cmp-toggle>⇄ Confronta</button>
       <label for="sort">Ordina per</label>
       <select id="sort" data-sort>
@@ -104,6 +107,24 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
           </article>
         );
       })}
+      {tutti.map((a) => (
+        <article class="card scooter tutti-card" data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
+          <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
+            {a.img ? <img src={a.img} alt={a.model} loading="lazy" referrerpolicy="no-referrer" /> : <ScooterMark />}
+            <span class="tutti-badge">da tutti.ch</span>
+          </a>
+          <h3><a href={a.url} target="_blank" rel="noopener" class="scooter-link">{a.model}</a></h3>
+          <ul class="specs">
+            <li><small>Località</small> {a.loc}</li>
+            {a.km != null && <li><small>Km</small> {a.km}</li>}
+            <li><small>Venditore</small> Privato</li>
+          </ul>
+          <div class="scooter-foot">
+            <span class="big-price">{chf(a.price)}</span>
+            <a class="btn btn-sm" href={a.url} target="_blank" rel="noopener">Vedi su tutti.ch</a>
+          </div>
+        </article>
+      ))}
     </div>
     {sortable && <p class="sub filters-empty" data-empty hidden>Nessun monopattino con questi filtri. <button type="button" class="filters-reset" data-reset>Azzera i filtri</button></p>}
   </div>
