@@ -1,0 +1,127 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+// Foto dell'hero (slideshow): [file, descrizione, inquadratura orizzontale]
+const heroPhotos = import.meta.glob<{ default: ImageMetadata }>('../assets/hero/h*.jpg', { eager: true });
+const slides = [
+  ['h1', 'Un rider in impennata su un monopattino elettrico', '55%'],
+  ['h2', 'Una ragazza in monopattino elettrico in città', '35%'],
+  ['h3', 'Una donna in monopattino elettrico su una strada alberata', '45%'],
+  ['h4', 'Un ragazzo in monopattino elettrico in velocità', '22%'],
+  ['h5', 'Una ragazza in monopattino elettrico su un piazzale', '45%'],
+  ['h6', 'Un uomo in monopattino elettrico su un sentiero', '50%'],
+  ['h7', 'Un uomo con il casco su un monopattino elettrico', '30%'],
+  ['h8', 'Una ragazza in monopattino elettrico nel parco', '55%'],
+  ['h9', 'Un uomo in monopattino elettrico su un percorso nel verde', '55%'],
+].map(([f, alt, x]) => ({ src: heroPhotos[`../assets/hero/${f}.jpg`].default, alt, x }));
+import ScooterCards from '../components/ScooterCards.astro';
+import Steps from '../components/Steps.astro';
+import Contacts from '../components/Contacts.astro';
+import { scooters, chf, wa } from '../data/site.js';
+
+// Prezzo più basso tra i disponibili, per l'hero
+const prices = scooters.filter((s) => s.status === 'disponibile' && s.price != null).map((s) => s.price);
+const from = prices.length ? Math.min(...prices) : null;
+---
+<Layout>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">Monopattini elettrici usati</p>
+        <h1>Usato sì,<br /><span class="accent">ma come nuovo.</span></h1>
+        <p class="lead">Monopattini elettrici di seconda mano controllati, testati su strada e garantiti. Xiaomi, Ninebot, Navee e altre marche{from != null && <>, a partire da {chf(from)}</>}.</p>
+        <div class="cta-row">
+          <a class="btn" href="/usato">Vedi i monopattini</a>
+          <a class="btn btn-ghost" href="/vendi">Vendi il tuo</a>
+        </div>
+        <ul class="badges">
+          <li>✓ Batteria controllata</li>
+          <li>✓ Testati su strada</li>
+          <li>✓ 6 mesi di garanzia</li>
+        </ul>
+      </div>
+      <div class="hero-art">
+        <div class="hero-photo hero-slides" data-slides>
+          {slides.map((sl, i) => (
+            <Image src={sl.src} alt={sl.alt} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px"
+              loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined}
+              class:list={['hero-slide', i === 0 && 'on']} style={`object-position:${sl.x} 50%`} />
+          ))}
+          <div class="hero-dots">
+            {slides.map((_, i) => <button type="button" aria-label={`Foto ${i + 1}`} aria-current={i === 0 ? 'true' : undefined} data-dot={i}></button>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="usato" class="section">
+    <div class="wrap">
+      <p class="eyebrow">Disponibili ora</p>
+      <h2>Monopattini in vendita</h2>
+      <p class="sub">Ogni monopattino è controllato, testato su strada e venduto con 6 mesi di garanzia.</p>
+      <ScooterCards onlyAvailable />
+      <p class="note"><a href="/usato">Vedi tutti, con filtri e confronto</a></p>
+    </div>
+  </section>
+
+  <Steps />
+
+  <section class="section">
+    <div class="wrap sell-cta">
+      <div>
+        <p class="eyebrow">Vendi il tuo monopattino</p>
+        <h2>Hai un monopattino che non usi più?</h2>
+        <p class="sub">Lo valutiamo e, se l'offerta ti va bene, lo compriamo noi. Guarda quanto paghiamo per ogni modello.</p>
+      </div>
+      <div class="cta-row">
+        <a class="btn" href="/vendi">Quanto vale il mio?</a>
+        <a class="btn btn-ghost" href={wa('Ciao! Vorrei vendere il mio monopattino.')}>Scrivici su WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contatti" class="section alt">
+    <div class="wrap">
+      <Contacts />
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Slideshow dell'hero: cambia foto ogni 5 s (ferma se l'utente preferisce meno animazioni); i pallini scelgono la foto.
+  document.querySelectorAll<HTMLElement>('[data-slides]').forEach((box) => {
+    const slides = [...box.querySelectorAll<HTMLElement>('.hero-slide')];
+    const dots = [...box.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    let i = 0, timer = 0;
+    const show = (n: number) => {
+      slides[i].classList.remove('on'); dots[i].removeAttribute('aria-current');
+      i = (n + slides.length) % slides.length;
+      slides[i].classList.add('on'); dots[i].setAttribute('aria-current', 'true');
+    };
+    const start = () => {
+      clearInterval(timer);
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setInterval(() => show(i + 1), 5000);
+    };
+    dots.forEach((d, n) => d.addEventListener('click', () => { show(n); start(); }));
+
+    // Scorrere col dito (o trascinare col mouse) verso sinistra/destra per cambiare foto
+    let x0: number | null = null;
+    box.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    box.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 40) { show(i + (dx < 0 ? 1 : -1)); start(); }
+    });
+    box.addEventListener('pointercancel', () => { x0 = null; });
+    box.addEventListener('dragstart', (e) => e.preventDefault());
+    start();
+  });
+</script>
+
+<style>
+  .sell-cta { display: flex; align-items: center; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; }
+  .sell-cta .sub { margin-bottom: 0; }
+  .sell-cta .cta-row { margin: 0; }
+</style>

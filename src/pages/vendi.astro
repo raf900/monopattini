@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Steps from '../components/Steps.astro';
+import { buyBrands, buyPrices, sellSteps, chf, wa } from '../data/site.js';
+
+// Una fisarmonica per marca, nell'ordine di buyBrands; la prima è aperta
+const groups = buyBrands
+  .map((brand) => ({ brand, models: buyPrices.filter((p) => p.brand === brand) }))
+  .filter((g) => g.models.length);
+---
+<Layout
+  title="Vendi il tuo monopattino — Monopattini.ch"
+  description="Vendi il tuo monopattino elettrico usato: guarda quanto paghiamo per ogni modello e chiedi una valutazione su WhatsApp."
+>
+  <section class="section page-top">
+    <div class="wrap">
+      <p class="eyebrow">Vendi il tuo monopattino</p>
+      <h1 class="page-title">Quanto vale il tuo monopattino?</h1>
+      <p class="sub">Compriamo monopattini elettrici usati. Qui sotto trovi quanto paghiamo per ogni modello: il prezzo esatto dipende dalle condizioni, dalla batteria e dai km.</p>
+      <div class="cta-row">
+        <a class="btn" href={wa('Ciao! Vorrei vendere il mio monopattino. Modello: ')}>Chiedi una valutazione su WhatsApp</a>
+      </div>
+
+      <div class="buy-groups">
+        {groups.map((g, i) => (
+          <details class="card buy-table" open={i === 0}>
+            <summary>
+              <span class="buy-name">{g.brand}</span>
+              <span class="buy-brand">{g.models.length} modell{g.models.length === 1 ? 'o' : 'i'}</span>
+              <svg class="buy-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <table>
+              <thead><tr><th>Modello</th><th>Condizioni scarse</th><th>Ottime condizioni</th></tr></thead>
+              <tbody>
+                {g.models.map((m) => (
+                  <tr><th>{m.model}</th><td>{chf(m.min)}</td><td class="buy-max">{chf(m.max)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
+        ))}
+      </div>
+      <p class="note">Il tuo modello non c'è? <a href={wa('Ciao! Vorrei vendere il mio monopattino, ma il modello non è in elenco. Modello: ')}>Scrivici lo stesso</a>.</p>
+    </div>
+  </section>
+
+  <Steps items={sellSteps} title="Come funziona la vendita" />
+</Layout>

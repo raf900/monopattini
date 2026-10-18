@@ -1,0 +1,101 @@
+---
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+import { site, wa } from '../data/site.js';
+
+const nav = [['/usato', 'Monopattini'], ['/vendi', 'Vendi il tuo'], ['/contatti', 'Contatti']];
+const path = Astro.url.pathname;
+
+// Icone del menu mobile (tratti SVG, viewBox 24×24).
+const icons = {
+  '/': '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  '/usato': '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
+  '/vendi': '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/>',
+  '/contatti': '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+};
+const { title =`${site.name} — ${site.tagline}`, description = 'Monopattini elettrici usati in Ticino: controllati, testati su strada e garantiti. Compra o vendi il tuo monopattino.' } = Astro.props;
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_CH" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <Logo />
+        <nav>
+          {nav.map(([href, label]) => (
+            <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a>
+          ))}
+        </nav>
+        <a class="btn btn-sm nav-wa" href={wa('Ciao! Vorrei informazioni sui vostri monopattini.')}>WhatsApp</a>
+        <button type="button" class="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="drawer" data-menu-open>
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Menu laterale per mobile: fuori dall'header, perché il backdrop-filter dell'header romperebbe position: fixed. -->
+    <div class="drawer-backdrop" data-menu-close></div>
+    <aside id="drawer" class="drawer" aria-label="Menu" inert>
+      <div class="drawer-head">
+        <Logo />
+        <button type="button" class="menu-close" aria-label="Chiudi il menu" data-menu-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <nav class="drawer-nav">
+        {[['/', 'Home'], ...nav].map(([href, label]) => (
+          <a href={href} aria-current={(href === '/' ? path === '/' : path.startsWith(href)) ? 'page' : undefined}>
+            <svg class="drawer-ico" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[href]} />{label}
+          </a>
+        ))}
+      </nav>
+      <a class="btn drawer-wa" href={wa('Ciao! Vorrei informazioni sui vostri monopattini.')}>Scrivici su WhatsApp</a>
+    </aside>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <span>© {new Date().getFullYear()} {site.name}</span>
+        <span>monopattini.ch</span>
+      </div>
+    </footer>
+
+    <script>
+      const root = document.documentElement;
+      const drawer = document.getElementById('drawer')!;
+      const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+      // Il ✕ sta dove c'era ☰: un tocco "doppio" su alcuni telefoni chiuderebbe subito il menu.
+      let openedAt = 0;
+      const setOpen = (open: boolean) => {
+        if (!open && Date.now() - openedAt < 400) return;
+        if (open) openedAt = Date.now();
+        root.classList.toggle('menu-open', open);
+        drawer.inert = !open;
+        openBtn.setAttribute('aria-expanded', String(open));
+        if (open) drawer.querySelector<HTMLElement>('.menu-close')?.focus();
+        else openBtn.focus({ preventScroll: true });
+      };
+      openBtn.addEventListener('click', () => setOpen(true));
+      document.querySelectorAll('[data-menu-close], .drawer a').forEach((el) => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('menu-open')) setOpen(false); });
+    </script>
+  </body>
+</html>

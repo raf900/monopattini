@@ -1,0 +1,54 @@
+---
+// Marchio del sito: il monopattino dell'illustrazione, tutto blu e un po' più spesso, con scie di velocità.
+import { scooterPaths } from '../data/scooterArt.js';
+
+// tail: allunga le scie verso destra (unità del disegno), per farle passare dietro la scritta nel logo.
+// dashes: trattini staccati in fondo alle scie (spenti nel logo, dove finirebbero dentro le lettere).
+const { class: className, tail = 0, dashes = true, ...rest } = Astro.props;
+
+// Tutto tranne il cavo del freno (path 0).
+const body = scooterPaths.filter((_, i) => i !== 0).map((p) => p.d);
+const wheels = [[282, 1225], [678, 1225]];
+
+// Scie: tra il piantone e la ruota posteriore, la più bassa appena sopra la pedana e le altre a salire
+// ogni 50 unità. Partono subito dietro piantone/telaio; quelle basse sono più corte per non toccare il parafango.
+const stemX = (y) => 400 - (y - 744) * 0.249;   // bordo del piantone
+const neckX = (y) => 330 + (y - 1080) * 0.53;   // bordo del telaio verso la pedana
+const startX = (y) => Math.max(stemX(y) + 42, neckX(y) + 30);
+const rows = [
+  { y: 930, w: 16, len: 250, dash: 40 },
+  { y: 980, w: 12, len: 200, dash: 0 },
+  { y: 1030, w: 18, len: 280, dash: 46 },
+  { y: 1080, w: 12, len: 180, dash: 30 },
+  { y: 1130, w: 16, len: 220, dash: 0 },
+];
+const lines = rows.flatMap(({ y, w, len, dash }) => {
+  const x0 = startX(y), x1 = x0 + len + tail;
+  const segs = [{ d: `M${x0} ${y}H${x1}`, w, o: 1 }];
+  if (dash && dashes) segs.push({ d: `M${x1 + w + 10} ${y}h${dash}`, w, o: 0.55 });
+  return segs;
+});
+
+// Il viewBox include anche le scie.
+// (le scie allungate con tail possono uscire dal viewBox: overflow visibile, finiscono dietro la scritta)
+const right = Math.max(780, ...rows.map(({ y, len, dash, w }) => startX(y) + len + (dash ? w + 10 + dash : 0) + w / 2 + 4));
+const viewBox = `220 728 ${Math.ceil(right - 220)} 562`;
+
+// id univoci: il marchio compare più volte nella stessa pagina.
+const mid = `sm-mask-${Math.random().toString(36).slice(2, 8)}`;
+---
+<svg class:list={['logo-mark', className]} viewBox={viewBox} overflow="visible" aria-hidden="true" {...rest}>
+  <defs>
+    <mask id={mid} maskUnits="userSpaceOnUse" x="200" y="700" width="620" height="620">
+      <rect x="200" y="700" width="620" height="620" fill="#fff" />
+      {wheels.map(([cx, cy]) => <circle cx={cx} cy={cy} r="37" fill="#000" />)}
+      {wheels.map(([cx, cy]) => <circle cx={cx} cy={cy} r="13" fill="#fff" />)}
+    </mask>
+  </defs>
+  <g class="sm-lines">
+    {lines.map((l) => <path d={l.d} stroke-width={l.w} opacity={l.o} />)}
+  </g>
+  <g class="sm-body" mask={`url(#${mid})`}>
+    {body.map((d) => <path d={d} />)}
+  </g>
+</svg>

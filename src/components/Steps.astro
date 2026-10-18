@@ -1,0 +1,20 @@
+---
+import { steps as buySteps } from '../data/site.js';
+
+// items: elenco dei passi (default: come funziona l'acquisto)
+const { items = buySteps, title = 'Come funziona' } = Astro.props;
+---
+<!-- Come funziona: una sola riga compatta -->
+<section class="steps-bar alt">
+  <div class="wrap">
+    <p class="eyebrow">{title}</p>
+    <ol class:list={['steps', items.length === 3 && 'steps-3']}>
+      {items.map((s, i) => (
+        <li>
+          <span class="step-n">{i + 1}</span>
+          <div><h3>{s.title}</h3><p>{s.text}</p></div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
