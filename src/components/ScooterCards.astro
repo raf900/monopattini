@@ -60,6 +60,15 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         <h2>Filtri</h2>
         <button type="button" class="filters-reset" data-reset>Azzera</button>
       </div>
+      {tutti.length > 0 && (
+        <div class="range">
+          <div class="range-top"><span>Venduti da</span></div>
+          <div class="src-btns">
+            <button type="button" aria-pressed="true" data-src="mine">Monopattini.ch</button>
+            <button type="button" aria-pressed="true" data-src="tutti">tutti.ch</button>
+          </div>
+        </div>
+      )}
       {filters.map((f) => (
         <div class="range" data-range={f.key}>
           <div class="range-top"><span>{f.label}</span><b data-out>{f.fmt(f.min)} – {f.fmt(f.max)}</b></div>
@@ -78,7 +87,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         const img = photo(s.photos?.[0]);
         const href = `/usato/${s.slug}`;
         return (
-          <article class="card scooter" data-price={s.price ?? ''} data-year={s.year ?? ''} data-km={s.km ?? ''} data-speed={topSpeed(s)} data-wheel={wheel(s)} data-autonomia={autonomy(s)} data-score={s.punteggio?.totale ?? ''}>
+          <article class="card scooter" data-source="mine" data-price={s.price ?? ''} data-year={s.year ?? ''} data-km={s.km ?? ''} data-speed={topSpeed(s)} data-wheel={wheel(s)} data-autonomia={autonomy(s)} data-score={s.punteggio?.totale ?? ''}>
             <a href={href} class:list={['scooter-img', img && 'has-photo', /\.(png|webp)$/.test(s.photos?.[0] ?? '') && 'cutout']} aria-label={s.model}>
               {img
                 ? <Image src={img} alt={s.model} widths={[320, 640]} sizes="(max-width: 600px) 90vw, 340px" />
@@ -108,10 +117,9 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         );
       })}
       {tutti.map((a) => (
-        <article class="card scooter tutti-card" data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
+        <article class="card scooter tutti-card" data-source="tutti" data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
           <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
             {a.img ? <img src={a.img} alt={a.model} loading="lazy" referrerpolicy="no-referrer" /> : <ScooterMark />}
-            <span class="tutti-badge">da tutti.ch</span>
           </a>
           <h3><a href={a.url} target="_blank" rel="noopener" class="scooter-link">{a.model}</a></h3>
           <ul class="specs">
@@ -121,7 +129,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
           </ul>
           <div class="scooter-foot">
             <span class="big-price">{chf(a.price)}</span>
-            <a class="btn btn-sm" href={a.url} target="_blank" rel="noopener">Vedi su tutti.ch</a>
+            <a class="btn btn-sm btn-tutti" href={a.url} target="_blank" rel="noopener">su tutti.ch</a>
           </div>
         </article>
       ))}
@@ -141,6 +149,8 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
     const fmts: Record<string, string> = JSON.parse(panel.dataset.fmts!);
     const show = (k: string, v: number) => fmts[k].replace('#', k === 'wheel' ? String(v).replace('.', ',') : k === 'km' ? v.toLocaleString('de-CH') : String(v));
     const ranges = [...panel.querySelectorAll<HTMLElement>('[data-range]')];
+    const srcBtns = [...panel.querySelectorAll<HTMLButtonElement>('[data-src]')];
+    srcBtns.forEach((b) => b.addEventListener('click', () => { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); filter(); }));
 
     // Ordina (all'apertura: prezzo più basso); i monopattini senza valore vanno in fondo
     const sort = () => {
@@ -161,9 +171,11 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         r.querySelector('[data-out]')!.textContent = `${show(r.dataset.range!, a)} – ${show(r.dataset.range!, b)}`;
         return [r.dataset.range!, a, b] as const;
       });
+      // provenienza: pulsanti "Monopattini.ch" / "tutti.ch" (attivi = mostrati)
+      const on = srcBtns.filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.dataset.src);
       let n = 0;
       cards.forEach((c) => {
-        const ok = limits.every(([k, a, b]) => { const v = num(c, k); return isNaN(v) || (v >= a && v <= b); });
+        const ok = (!srcBtns.length || on.includes(c.dataset.source!)) && limits.every(([k, a, b]) => { const v = num(c, k); return isNaN(v) || (v >= a && v <= b); });
         c.hidden = !ok;
         if (ok) n++;
       });
@@ -184,6 +196,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         const lo = r.querySelector<HTMLInputElement>('[data-lo]')!, hi = r.querySelector<HTMLInputElement>('[data-hi]')!;
         lo.value = lo.min; hi.value = hi.max;
       });
+      srcBtns.forEach((s) => s.setAttribute('aria-pressed', 'true'));
       filter();
     }));
 

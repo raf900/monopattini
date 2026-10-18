@@ -211,8 +211,8 @@ const tuttiImg = (n) => (n ? `https://c.tutti.ch/big/${n}.jpg` : '');
 export const tuttiAds = [
   { id: '80568247', path: 'altri-sport/xiaomi-mi-electric-scooter-1s-ottime-condizioni', model: 'Xiaomi 1S', price: 200, loc: 'Piazzogna', img: tuttiImg('') },
   { id: '79677168', path: 'altri-sport/e-scooter-xiaomi-mi-essential', model: 'Xiaomi Essential', price: 150, loc: 'Mendrisio', km: 300, img: tuttiImg('6861996932') },
-  { id: '83405614', path: 'altri-sport/2-xiaomi-scooter-mi-electric-mit-ersatzreifen-oder-einzeln', model: '2× Xiaomi Mi Electric', price: 300, loc: 'Minusio', img: tuttiImg('8878547539') },
-  { id: '74857691', path: 'biciclette/e-scooter-xiaomi-monopattino-elettrico', model: 'Xiaomi Pro 2', price: 220, loc: 'Vezio', img: tuttiImg('7409825740') },
+  { id: '83405614', path: 'altri-sport/2-xiaomi-scooter-mi-electric-mit-ersatzreifen-oder-einzeln', model: 'Xiaomi Essential x2', price: 300, loc: 'Minusio', img: tuttiImg('8878547539') },
+  { id: '74857691', path: 'biciclette/e-scooter-xiaomi-monopattino-elettrico', model: 'Xiaomi Pro 2 CH', price: 220, loc: 'Vezio', img: tuttiImg('7409825740') },
   { id: '82557252', path: 'altri-sport/monopattino-elettrico', model: 'Ninebot', price: 180, loc: 'Agno', img: tuttiImg('7249865252') },
   { id: '80161902', path: 'biciclette/xiaomi-pro-3', model: 'Xiaomi Pro 3', price: 300, loc: 'Besazio', img: tuttiImg('3797972774') },
   { id: '82784502', path: 'altri-sport/-ottime-condizioni-usato-pochissimo', model: 'Xiaomi Pro / Pro 2', price: 190, loc: 'Lugano', img: tuttiImg('6512685602') },
@@ -222,7 +222,7 @@ export const tuttiAds = [
   { id: '83311606', path: 'altri-sport/vendo-monopattino-elettrico-xiaomi', model: 'Xiaomi 4 Pro', price: 250, loc: 'Cugnasco', img: tuttiImg('5734912140') },
   { id: '83388875', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 150, loc: 'Lugano', img: tuttiImg('1613057560') },
   { id: '82049247', path: 'altri-sport/monopattino', model: 'Xiaomi Pro / Pro 2', price: 200, loc: 'Riva San Vitale', img: tuttiImg('6517374216') },
-  { id: '83617573', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 1S', price: 150, loc: 'Chiasso', img: tuttiImg('1962220755') },
+  { id: '83617573', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi Pro 2 CH', price: 150, loc: 'Chiasso', img: tuttiImg('1962220755') },
   { id: '83018665', path: 'biciclette/vendo-usato-pochissimo-monopattino-elettrico', model: 'Xiaomi Pro / Pro 2', price: 180, loc: 'Lugano', img: tuttiImg('6070075758') },
   { id: '83150699', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 170, loc: 'Lugano', img: tuttiImg('9679261797') },
 ].map((a) => ({ ...a, url: `${tuttiBase}${a.path}/${a.id}` }));

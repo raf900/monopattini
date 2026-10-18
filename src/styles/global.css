@@ -200,7 +200,9 @@ a { color: var(--accent); }
 .scooter-link { color: inherit; text-decoration: none; }
 /* Annunci di privati su tutti.ch: foto vera a tutto riquadro ed etichetta con il logo di tutti */
 .scooter-img.tutti-photo img { inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-.tutti-badge { position: absolute; top: 10px; left: 10px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; background: #fff; color: #0d1626; font-size: .75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; box-shadow: 0 4px 12px -4px rgb(0 0 0 / .35); }
+/* pulsante col rosso di tutti.ch (theme-color del loro sito) */
+.btn-tutti { background: #ed2c28; white-space: nowrap; }
+.btn-tutti:hover { box-shadow: 0 8px 28px -6px rgb(237 44 40 / .55); }
 .scooter-link:hover { color: var(--accent); }
 /* Pagina Usato: filtri a sinistra, elenco a destra */
 .shop { display: grid; grid-template-columns: 300px 1fr; grid-template-areas: '. bar' 'filters main'; gap: 0 28px; align-items: start; }
@@ -211,7 +213,7 @@ a { color: var(--accent); }
 .shop .scooter { padding: 14px; }
 .shop .scooter h3 { font-size: 1rem; }
 .shop .scooter-img { margin-bottom: 12px; }
-.shop .big-price { font-size: 1.25rem; }
+.shop .big-price { font-size: 1.05rem; white-space: nowrap; }   /* prezzo sempre su una riga */
 .shop .specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .shop .specs li { padding: 4px 4px; font-size: .78rem; }
 @media (max-width: 1000px) { .shop .grid-3 { grid-template-columns: repeat(2, 1fr); } }
@@ -230,6 +232,10 @@ a { color: var(--accent); }
 .range-track input::-moz-range-track { background: none; }
 .range-track input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
 .range-track input::-moz-range-thumb { pointer-events: auto; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
+.src-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.src-btns button { font: inherit; font-size: .85rem; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; cursor: pointer; }
+.src-btns button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.src-btns button[data-src='tutti'][aria-pressed='true'] { background: #ed2c28; border-color: #ed2c28; }
 .filters-toggle { display: none; font: inherit; font-size: .9rem; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
 /* Confronto monopattini (pagina Usato) */
 .cmp-section { scroll-margin-top: 70px; padding-top: 48px; }
@@ -316,7 +322,11 @@ a { color: var(--accent); }
   .shop > .filters.open { margin-bottom: 18px; }
   .filters { position: static; display: none; }
   .filters.open { display: block; }
-  .filters-toggle { display: inline-block; }
+  .src-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.src-btns button { font: inherit; font-size: .85rem; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; cursor: pointer; }
+.src-btns button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.src-btns button[data-src='tutti'][aria-pressed='true'] { background: #ed2c28; border-color: #ed2c28; }
+.filters-toggle { display: inline-block; }
   /* menu laterale anche su tablet: con 4 voci il menu in alto non ci sta più */
   .nav nav, .nav-wa { display: none; }
   .menu-btn { display: flex; }
