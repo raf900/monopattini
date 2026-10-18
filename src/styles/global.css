@@ -60,7 +60,7 @@ a { color: var(--accent); }
 .logo-mark { height: 34px; width: auto; }
 /* Logo: scritta + monopattino a destra, specchiato (va verso destra), con le scie che finiscono dietro ".ch".
    L'alone del colore di sfondo attorno alle lettere fa sembrare che le scie passino dietro. */
-.logo .logo-mark { transform: scaleX(-1); font-size: 1.2rem; margin-left: -.35em; --sm-color: var(--text); }
+.logo .logo-mark { transform: scaleX(-1); font-size: 1.2rem; margin-left: -.05em; --sm-color: var(--text); }
 .drawer-head .logo .logo-mark { font-size: 1.05rem; }
 .logo-word {
   position: relative; z-index: 1;
@@ -68,7 +68,12 @@ a { color: var(--accent); }
   -webkit-text-stroke: .12em var(--logo-halo); paint-order: stroke fill;
 }
 .logo-word b { color: var(--accent); }
-.logo-word small { font-size: .75em; color: var(--muted); }
+/* "TI" con la bandiera del Ticino (rosso sopra, blu sotto); senza alone, che coprirebbe i bordi delle lettere */
+.logo-ti {
+  background: linear-gradient(#e2231a 52%, #0f5bb5 52%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-stroke: 0;
+}
 .nav nav { display: flex; gap: 22px; margin-left: auto; }
 .nav nav a { color: var(--muted); text-decoration: none; font-weight: 500; }
 .nav nav a:hover { color: var(--text); }

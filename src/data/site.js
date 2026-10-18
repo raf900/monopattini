@@ -3,12 +3,12 @@ export const wa = (text) => `https://wa.me/${site.whatsapp}?text=${encodeURIComp
 export const chf = (n) => (n == null ? 'Prezzo su richiesta' : `CHF ${n.toLocaleString('de-CH')}.–`);
 
 export const site = {
-  name: 'MonopattiniUsati.ch',
+  name: 'Monopattini.ch',
   tagline: 'Monopattini elettrici usati, controllati e garantiti',
   phone: '+41 79 453 05 76',
   whatsapp: '41794530576', // numero senza "+" e spazi, per il link wa.me
-  email: 'info@monopattiniusati.ch', // TODO: verificare che la casella esista
-  instagram: 'monopattiniusati.ch', // TODO: nome Instagram reale
+  email: 'info@monopattini.ch', // TODO: verificare che la casella esista
+  instagram: 'monopattini.ch', // TODO: nome Instagram reale
   hours: [
     ['Lun – Ven', '09:00 – 12:00 · 14:00 – 18:30'], // TODO
     ['Sabato', '09:00 – 16:00'],

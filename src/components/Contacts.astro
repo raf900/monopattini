@@ -1,12 +1,9 @@
 ---
 import { site, wa } from '../data/site.js';
 
-// heading: 'h1' sulla pagina Contatti, 'h2' in home
-const { heading = 'h2' } = Astro.props;
-const H = heading;
 ---
 <p class="eyebrow">Contatti</p>
-<H class={heading === 'h1' ? 'page-title' : undefined}>Siamo a disposizione</H>
+<h2>Siamo a disposizione</h2>
 <div class="contact-grid">
   <div class="card contact-card">
     <ul class="contact-list">
