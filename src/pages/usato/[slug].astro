@@ -44,6 +44,9 @@ const diag = [
 ].filter(Boolean);
 const scoreRows = s.punteggio ? [['Batteria', s.punteggio.batteria], ['Freni', s.punteggio.freni], ['Gomme', s.punteggio.gomme], ['Estetica', s.punteggio.estetica], ['Elettronica', s.punteggio.elettronica]].filter(([, v]) => v != null) : [];
 
+// Altri monopattini con la stessa struttura
+const similar = scooters.filter((o) => o.slug !== s.slug && o.famiglia && o.famiglia === s.famiglia);
+
 const available = s.status !== 'esaurito';
 const ask = available
   ? wa(`Ciao! Sono interessato al ${s.model} (${chf(s.price)}). È ancora disponibile?`)
@@ -51,7 +54,7 @@ const ask = available
 ---
 <Layout
   title={`${s.model} usato — ${chf(s.price)} | Monopattini.ch`}
-  description={`${s.model} usato e controllato: ${chf(s.price)}, ${s.km} km, batteria al ${s.diagnosi?.saluteBatteria ?? '–'}%. Testato su strada, 6 mesi di garanzia.`}
+  description={`${s.model} usato e controllato: ${chf(s.price)}, ${s.km} km, batteria al ${s.diagnosi?.saluteBatteria ?? '–'}%. Testato e migliorato, 6 mesi di garanzia.`}
 >
   <section class="section page-top">
     <div class="wrap">
@@ -92,7 +95,7 @@ const ask = available
           <div class="cta-row">
             <a class="btn" href={ask}>{available ? 'Chiedi info su WhatsApp' : 'Avvisami se arriva'}</a>
           </div>
-          <p class="pd-note"><span>✓ Controllato e revisionato</span><i> · </i><span>✓ Testato su strada</span><i> · </i><span>✓ 6 mesi di garanzia</span></p>
+          <p class="pd-note"><span>✓ Controllato e revisionato</span><i> · </i><span>✓ Testato e migliorato</span><i> · </i><span>✓ 6 mesi di garanzia</span></p>
           {s.punteggio && (
             <a class="pd-lab" href="#valutazione" aria-label={`Punteggio ${s.punteggio.totale} su 10: vedi la valutazione`}>
               <span class="pd-lab-name"><ScooterMark class="pd-lab-mark" />SCORE</span>
@@ -175,11 +178,11 @@ const ask = available
     </section>
   )}
 
-  {scooters.length > 1 && (
+  {similar.length > 0 && (
     <section class="section">
       <div class="wrap">
         <h2>Altri monopattini</h2>
-        <ScooterCards exclude={s.slug} />
+        <ScooterCards exclude={s.slug} famiglia={s.famiglia} />
       </div>
     </section>
   )}

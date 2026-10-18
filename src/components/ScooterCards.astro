@@ -5,16 +5,17 @@ import { scooters, statusLabel, chf } from '../data/site.js';
 import { photo } from '../data/photos.js';
 
 // exclude: slug da non mostrare (es. il monopattino della pagina corrente)
+// famiglia: mostra solo i monopattini con la stessa struttura (pagina del monopattino)
 // onlyAvailable: mostra solo quelli 'disponibile' (usato in home)
 // sortable: mostra "Ordina per" e i filtri a cursore (pagina Usato)
-const { exclude, onlyAvailable = false, sortable = false } = Astro.props;
+const { exclude, famiglia, onlyAvailable = false, sortable = false } = Astro.props;
 // numero dalla velocità su strade private ("45 km/h" → 45); se manca, quella legale
 const topSpeed = (s) => parseInt(s.velocitaMax) || s.velocita || 0;
 // grandezza ruote dalla scheda tecnica ('8,5" con camera d’aria' → 8.5)
 const wheel = (s) => parseFloat((s.specs?.find(([k]) => k === 'Pneumatici')?.[1] ?? '').replace(',', '.')) || '';
 // autonomia dichiarata dalla scheda tecnica ('45 km' → 45)
 const autonomy = (s) => parseInt(s.specs?.find(([k]) => k === 'Autonomia dichiarata')?.[1] ?? '') || '';
-const list = scooters.filter((s) => s.slug !== exclude && (!onlyAvailable || s.status === 'disponibile'));
+const list = scooters.filter((s) => s.slug !== exclude && (!famiglia || s.famiglia === famiglia) && (!onlyAvailable || s.status === 'disponibile'));
 
 // Filtri a cursore: min e max presi dai monopattini in elenco (un filtro senza differenze non viene mostrato)
 const values = (fn) => list.map(fn).filter((v) => typeof v === 'number' && !isNaN(v));
