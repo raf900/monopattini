@@ -358,18 +358,18 @@ a { color: var(--accent); }
   /* telefono: card un po' più strette e foto più bassa */
   .grid-3 .scooter { width: 100%; max-width: 310px; margin-inline: auto; padding: 14px; }
   .grid-3 .scooter-img.has-photo { aspect-ratio: 16 / 11; }
-  /* telefono, pagina Usato: due colonne di card compatte, così si vedono più monopattini */
-  .shop .grid-3 { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .shop .grid-3 .scooter { max-width: none; padding: 8px; }
-  .shop .scooter-img { margin-bottom: 8px; }
-  .shop .scooter-img.has-photo { aspect-ratio: 1; }
-  .shop .scooter h3 { font-size: .85rem; margin-bottom: 6px; }
-  .shop .specs { gap: 3px; margin-bottom: 8px; }
-  .shop .specs li { padding: 3px 2px; font-size: .68rem; }
-  .shop .specs li small { font-size: .48rem; letter-spacing: 0; }
-  .shop .scooter-foot { flex-direction: column; align-items: stretch; gap: 6px; }
-  .shop .scooter-foot .btn { text-align: center; }
-  .shop .big-price { font-size: 1rem; }
+  /* telefono, tutte le liste di monopattini: due colonne di card compatte, così si vedono più monopattini */
+  .grid-3 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid-3 .scooter { max-width: none; padding: 8px; }
+  .grid-3 .scooter-img { margin-bottom: 8px; }
+  .grid-3 .scooter-img.has-photo { aspect-ratio: 1; }
+  .grid-3 .scooter h3 { font-size: .85rem; margin-bottom: 6px; }
+  .grid-3 .specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-bottom: 8px; }
+  .grid-3 .specs li { padding: 3px 2px; font-size: .68rem; }
+  .grid-3 .specs li small { font-size: .48rem; letter-spacing: 0; }
+  .grid-3 .scooter-foot { flex-direction: column; align-items: stretch; gap: 6px; }
+  .grid-3 .scooter-foot .btn { text-align: center; }
+  .grid-3 .big-price { font-size: 1rem; }
   .shop .cmp-pick { font-size: .72rem; padding: 6px; }
   /* telefono: i passi diventano card che scorrono in orizzontale, la successiva si intravede */
   .steps {
