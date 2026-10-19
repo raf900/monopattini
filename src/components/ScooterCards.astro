@@ -96,20 +96,20 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
           </div>
         </div>
       )}
-      {chipFilters.map((f) => (
-        <div class="range" data-chips={f.key}>
-          <div class="range-top"><span>{f.label}</span></div>
-          <div class="model-chips">
-            {f.opts.map((v) => <button type="button" aria-pressed="false" data-val={v}>{f.fmt(v)}</button>)}
-          </div>
-        </div>
-      ))}
       {filters.map((f) => (
         <div class="range" data-range={f.key}>
           <div class="range-top"><span>{f.label}</span><b data-out>{f.fmt(f.min)} – {f.fmt(f.max)}</b></div>
           <div class="range-track">
             <input type="range" min={f.min} max={f.max} step={f.step} value={f.min} data-lo aria-label={`${f.label} minimo`} />
             <input type="range" min={f.min} max={f.max} step={f.step} value={f.max} data-hi aria-label={`${f.label} massimo`} />
+          </div>
+        </div>
+      ))}
+      {chipFilters.map((f) => (
+        <div class="range" data-chips={f.key}>
+          <div class="range-top"><span>{f.label}</span></div>
+          <div class="model-chips">
+            {f.opts.map((v) => <button type="button" aria-pressed="false" data-val={v}>{f.fmt(v)}</button>)}
           </div>
         </div>
       ))}
