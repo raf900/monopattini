@@ -209,7 +209,7 @@ a { color: var(--accent); }
 .shop > .sort-bar { grid-area: bar; }
 .shop > .filters { grid-area: filters; }
 .shop > .shop-main { grid-area: main; }
-.shop .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.shop .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 0; }   /* allineata al riquadro dei filtri */
 .shop .scooter { padding: 14px; }
 .shop .scooter h3 { font-size: 1rem; }
 .shop .scooter-img { margin-bottom: 12px; }

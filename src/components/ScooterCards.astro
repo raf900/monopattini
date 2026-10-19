@@ -216,11 +216,11 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
 
     // Filtra: nasconde le card fuori dagli intervalli scelti (senza valore = sempre visibili)
     // Dopo un filtro l'elenco può accorciarsi: se eri più in basso, il browser ti porterebbe fino al footer.
-    // Su desktop (filtri fissi a lato) si torna invece all'inizio dei risultati.
-    const shop = grid.closest<HTMLElement>('.shop')!;
+    // Su desktop si torna invece dove i filtri iniziano a restare fissi (90px dall'alto, come .filters { top }),
+    // così il riquadro dei filtri resta allineato all'inizio dei risultati.
     const keepInView = () => {
       if (matchMedia('(max-width: 900px)').matches) return;
-      const top = shop.getBoundingClientRect().top + scrollY - 90;
+      const top = grid.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(panel).top);
       if (scrollY > top) scrollTo({ top, behavior: 'instant' });
     };
     const filter = (user = true) => {
