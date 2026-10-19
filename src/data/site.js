@@ -32,7 +32,7 @@ export const site = {
 //   video       facoltativo: link YouTube oppure file in public/video/ (es. '/video/pro2.mp4')
 //   specs       scheda tecnica [etichetta, valore] — dati del produttore, TODO: verificare
 //   description, work (revisione effettuata), included — TODO: testi segnaposto
-export const allScooters = [
+const allScooters = [
   {
     slug: 'xiaomi-essential', nascosto: true, famiglia: 'xiaomi-classic', model: 'Xiaomi Mi Essential', photos: ['xiaomi-essential-1.webp', 'xiaomi-essential-2.webp', 'xiaomi-essential-3.webp', 'xiaomi-essential-4.webp', 'xiaomi-essential-5.webp'], status: 'disponibile',
     year: 2022, km: 70, price: 140, condition: 'Come nuovo',
@@ -209,23 +209,24 @@ export const sellSteps = [
 // Monopattini di privati su tutti.ch (con il permesso dei venditori): solo card, il click apre l'annuncio su tutti.ch.
 //   id     numero dell'annuncio (fine del link)   img   foto principale su tutti.ch (vuota = icona)
 //   model  modello, se noto                       price CHF   loc località
+//   autonomia (km), velocita (massima, km/h), ruote (pollici): per i filtri; vuoti = sconosciuti (es. Ninebot)
 const tuttiBase = 'https://www.tutti.ch/it/vi/ticino/sport-e-outdoor/';
 const tuttiImg = (n) => (n ? `https://c.tutti.ch/big/${n}.jpg` : '');
 export const tuttiAds = [
-  { id: '80568247', path: 'altri-sport/xiaomi-mi-electric-scooter-1s-ottime-condizioni', model: 'Xiaomi 1S', price: 200, loc: 'Piazzogna', img: tuttiImg('') },
-  { id: '79677168', path: 'altri-sport/e-scooter-xiaomi-mi-essential', model: 'Xiaomi Essential', price: 150, loc: 'Mendrisio', km: 300, img: tuttiImg('6861996932') },
-  { id: '83405614', path: 'altri-sport/2-xiaomi-scooter-mi-electric-mit-ersatzreifen-oder-einzeln', model: 'Xiaomi Essential x2', price: 300, loc: 'Minusio', img: tuttiImg('8878547539') },
-  { id: '74857691', path: 'biciclette/e-scooter-xiaomi-monopattino-elettrico', model: 'Xiaomi Pro 2 CH', price: 220, loc: 'Vezio', img: tuttiImg('7409825740') },
+  { id: '80568247', path: 'altri-sport/xiaomi-mi-electric-scooter-1s-ottime-condizioni', model: 'Xiaomi 1S', price: 200, loc: 'Piazzogna', autonomia: 30, velocita: 45, ruote: 8.5, img: tuttiImg('') },
+  { id: '79677168', path: 'altri-sport/e-scooter-xiaomi-mi-essential', model: 'Xiaomi Essential', price: 150, loc: 'Mendrisio', km: 300, autonomia: 20, velocita: 40, ruote: 8.5, img: tuttiImg('6861996932') },
+  { id: '83405614', path: 'altri-sport/2-xiaomi-scooter-mi-electric-mit-ersatzreifen-oder-einzeln', model: 'Xiaomi Essential x2', price: 300, loc: 'Minusio', autonomia: 20, velocita: 40, ruote: 8.5, img: tuttiImg('8878547539') },
+  { id: '74857691', path: 'biciclette/e-scooter-xiaomi-monopattino-elettrico', model: 'Xiaomi Pro 2 CH', price: 220, loc: 'Vezio', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('7409825740') },
   { id: '82557252', path: 'altri-sport/monopattino-elettrico', model: 'Ninebot', price: 180, loc: 'Agno', img: tuttiImg('7249865252') },
-  { id: '80161902', path: 'biciclette/xiaomi-pro-3', model: 'Xiaomi Pro 3', price: 300, loc: 'Besazio', img: tuttiImg('3797972774') },
-  { id: '82784502', path: 'altri-sport/-ottime-condizioni-usato-pochissimo', model: 'Xiaomi Pro / Pro 2', price: 190, loc: 'Lugano', img: tuttiImg('6512685602') },
-  { id: '82828618', path: 'altri-sport/monopattino', model: 'Xiaomi Pro / Pro 2', price: 150, loc: 'Someo', img: tuttiImg('3221736365') },
-  { id: '82102252', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi Pro 2', price: 350, loc: 'Pregassona', img: tuttiImg('6514041617') },
+  { id: '80161902', path: 'biciclette/xiaomi-pro-3', model: 'Xiaomi Pro 3', price: 300, loc: 'Besazio', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('3797972774') },
+  { id: '82784502', path: 'altri-sport/-ottime-condizioni-usato-pochissimo', model: 'Xiaomi Pro / Pro 2', price: 190, loc: 'Lugano', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('6512685602') },
+  { id: '82828618', path: 'altri-sport/monopattino', model: 'Xiaomi Pro / Pro 2', price: 150, loc: 'Someo', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('3221736365') },
+  { id: '82102252', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi Pro 2', price: 350, loc: 'Pregassona', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('6514041617') },
   { id: '83275789', path: 'altri-sport/monopattino-elettrico', model: 'Ninebot', price: 100, loc: 'Tegna', img: tuttiImg('4174039858') },
-  { id: '83311606', path: 'altri-sport/vendo-monopattino-elettrico-xiaomi', model: 'Xiaomi 4 Pro', price: 250, loc: 'Cugnasco', img: tuttiImg('5734912140') },
-  { id: '83388875', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 150, loc: 'Lugano', img: tuttiImg('1613057560') },
-  { id: '82049247', path: 'altri-sport/monopattino', model: 'Xiaomi Pro / Pro 2', price: 200, loc: 'Riva San Vitale', img: tuttiImg('6517374216') },
-  { id: '83617573', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi Pro 2 CH', price: 150, loc: 'Chiasso', img: tuttiImg('1962220755') },
-  { id: '83018665', path: 'biciclette/vendo-usato-pochissimo-monopattino-elettrico', model: 'Xiaomi Pro / Pro 2', price: 180, loc: 'Lugano', img: tuttiImg('6070075758') },
-  { id: '83150699', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 170, loc: 'Lugano', img: tuttiImg('9679261797') },
+  { id: '83311606', path: 'altri-sport/vendo-monopattino-elettrico-xiaomi', model: 'Xiaomi 4 Pro', price: 250, loc: 'Cugnasco', autonomia: 60, velocita: 30, ruote: 10, img: tuttiImg('5734912140') },
+  { id: '83388875', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 150, loc: 'Lugano', autonomia: 60, velocita: 30, ruote: 10, img: tuttiImg('1613057560') },
+  { id: '82049247', path: 'altri-sport/monopattino', model: 'Xiaomi Pro / Pro 2', price: 200, loc: 'Riva San Vitale', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('6517374216') },
+  { id: '83617573', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi Pro 2 CH', price: 150, loc: 'Chiasso', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('1962220755') },
+  { id: '83018665', path: 'biciclette/vendo-usato-pochissimo-monopattino-elettrico', model: 'Xiaomi Pro / Pro 2', price: 180, loc: 'Lugano', autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('6070075758') },
+  { id: '83150699', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 170, loc: 'Lugano', autonomia: 60, velocita: 30, ruote: 10, img: tuttiImg('9679261797') },
 ].map((a) => ({ ...a, url: `${tuttiBase}${a.path}/${a.id}` }));

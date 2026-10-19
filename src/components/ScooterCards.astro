@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import ScooterMark from './ScooterMark.astro';
-import { scooters, allScooters, tuttiAds, statusLabel, chf } from '../data/site.js';
+import { scooters, tuttiAds, statusLabel, chf } from '../data/site.js';
 import { photo } from '../data/photos.js';
 
 // exclude: slug da non mostrare (es. il monopattino della pagina corrente)
@@ -30,11 +30,12 @@ const filters = [
   // estremi arrotondati al passo del cursore, così nessun monopattino resta escluso all'apertura
   .map((f) => ({ ...f, min: Math.floor(Math.min(...f.vals) / f.step) * f.step, max: Math.ceil(Math.max(...f.vals) / f.step) * f.step }))
   .filter((f) => f.vals.length && f.min < f.max);
+const tuttiVals = (k) => tutti.map((a) => a[k]).filter((v) => typeof v === 'number');
 // Filtri a etichette (pochi valori possibili): si possono scegliere più valori; nessuno scelto = tutti
 const chipFilters = [
-  { key: 'autonomia', label: 'Autonomia', fmt: (v) => `${v} km`, vals: values(autonomy) },
-  { key: 'speed', label: 'Velocità', fmt: (v) => `${v} km/h`, vals: values(topSpeed) },
-  { key: 'wheel', label: 'Ruote', fmt: (v) => `${String(v).replace('.', ',')}"`, vals: values(wheel) },
+  { key: 'autonomia', label: 'Autonomia', fmt: (v) => `${v} km`, vals: [...values(autonomy), ...tuttiVals('autonomia')] },
+  { key: 'speed', label: 'Velocità', fmt: (v) => `${v} km/h`, vals: [...values(topSpeed), ...tuttiVals('velocita')] },
+  { key: 'wheel', label: 'Ruote', fmt: (v) => `${String(v).replace('.', ',')}"`, vals: [...values(wheel), ...tuttiVals('ruote')] },
 ]
   .map((f) => ({ ...f, opts: [...new Set(f.vals)].sort((a, b) => a - b) }))
   .filter((f) => f.opts.length > 1);
@@ -44,10 +45,6 @@ const modelsOf = (name) => {
   const n = name.replace(/\(.*?\)|\bx\d+\b|\bCH\b|\bXiaomi\b|\bMi\b/g, ' ').replace(/\s+/g, ' ').trim();
   return n.split(/\s*(?:\/|\bo\b)\s*/).map((m) => m.trim()).filter((m) => modelOrder.includes(m));
 };
-// Annunci tutti.ch: autonomia, velocità e ruote stimate da un nostro monopattino dello stesso modello
-// ('Pro / Pro 2' → Pro; il Pro 3 è uguale al Pro 2; i Ninebot restano senza dati)
-const sameAs = { 'Pro 3': 'Pro 2' };
-const like = (a) => { let m = modelsOf(a.model)[0]; m = sameAs[m] ?? m; return m && allScooters.find((s) => modelsOf(s.model)[0] === m); };
 const allModels =[...list.map((s) => modelsOf(s.model)), ...tutti.map((a) => modelsOf(a.model))];
 const modelChips = modelOrder
   .map((m) => ({ m, n: allModels.filter((ms) => ms.includes(m)).length }))
@@ -158,7 +155,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         </div>
       )}
       {tutti.map((a) => (
-        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed={like(a) ? topSpeed(like(a)) : ''} data-wheel={like(a) ? wheel(like(a)) : ''} data-autonomia={like(a) ? autonomy(like(a)) : ''} data-score="">
+        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed={a.velocita ?? ''} data-wheel={a.ruote ?? ''} data-autonomia={a.autonomia ?? ''} data-score="">
           <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
             {a.img ? <img src={a.img} alt={a.model} loading="lazy" referrerpolicy="no-referrer" /> : <ScooterMark />}
           </a>
