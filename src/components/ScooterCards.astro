@@ -33,6 +33,16 @@ const filters = [
   // estremi arrotondati al passo del cursore, così nessun monopattino resta escluso all'apertura
   .map((f) => ({ ...f, min: Math.floor(Math.min(...f.vals) / f.step) * f.step, max: Math.ceil(Math.max(...f.vals) / f.step) * f.step }))
   .filter((f) => f.vals.length && f.min < f.max);
+// Modelli: nome ridotto al modello base ('Xiaomi Mi Pro 2' → 'Pro 2'); 'Pro / Pro 2' vale per entrambi
+const modelOrder = ['Essential', '1S', 'Pro', 'Pro 2', 'Pro 3', '4 Pro', '5', 'Ninebot'];
+const modelsOf = (name) => {
+  const n = name.replace(/\(.*?\)|\bx\d+\b|\bCH\b|\bXiaomi\b|\bMi\b/g, ' ').replace(/\s+/g, ' ').trim();
+  return n.split(/\s*(?:\/|\bo\b)\s*/).map((m) => m.trim()).filter((m) => modelOrder.includes(m));
+};
+const allModels = [...list.map((s) => modelsOf(s.model)), ...tutti.map((a) => modelsOf(a.model))];
+const modelChips = modelOrder
+  .map((m) => ({ m, n: allModels.filter((ms) => ms.includes(m)).length }))
+  .filter((c) => c.n > 0);
 const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1', '#')]));
 ---
 {list.length === 0 && <p class="sub">Al momento non ci sono monopattini disponibili. <a href="/usato">Guarda quelli in arrivo</a>.</p>}
@@ -60,6 +70,14 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         <h2>Filtri</h2>
         <button type="button" class="filters-reset" data-reset>Azzera</button>
       </div>
+      {modelChips.length > 1 && (
+        <div class="range">
+          <div class="range-top"><span>Modello</span></div>
+          <div class="model-chips">
+            {modelChips.map((c) => <button type="button" aria-pressed="false" data-model={c.m}>{c.m} <small>{c.n}</small></button>)}
+          </div>
+        </div>
+      )}
       {tutti.length > 0 && (
         <div class="range">
           <div class="range-top"><span>Venduti da</span></div>
@@ -87,7 +105,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         const img = photo(s.photos?.[0]);
         const href = `/usato/${s.slug}`;
         return (
-          <article class="card scooter" data-source="mine" data-price={s.price ?? ''} data-year={s.year ?? ''} data-km={s.km ?? ''} data-speed={topSpeed(s)} data-wheel={wheel(s)} data-autonomia={autonomy(s)} data-score={s.punteggio?.totale ?? ''}>
+          <article class="card scooter" data-source="mine" data-models={modelsOf(s.model).join('|')} data-price={s.price ?? ''} data-year={s.year ?? ''} data-km={s.km ?? ''} data-speed={topSpeed(s)} data-wheel={wheel(s)} data-autonomia={autonomy(s)} data-score={s.punteggio?.totale ?? ''}>
             <a href={href} class:list={['scooter-img', img && 'has-photo', /\.(png|webp)$/.test(s.photos?.[0] ?? '') && 'cutout']} aria-label={s.model}>
               {img
                 ? <Image src={img} alt={s.model} widths={[320, 640]} sizes="(max-width: 600px) 90vw, 340px" />
@@ -123,7 +141,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         </div>
       )}
       {tutti.map((a) => (
-        <article class="card scooter tutti-card" data-source="tutti" data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
+        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
           <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
             {a.img ? <img src={a.img} alt={a.model} loading="lazy" referrerpolicy="no-referrer" /> : <ScooterMark />}
           </a>
@@ -157,6 +175,9 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
     const show = (k: string, v: number) => fmts[k].replace('#', k === 'wheel' ? String(v).replace('.', ',') : k === 'km' ? v.toLocaleString('de-CH') : String(v));
     const ranges = [...panel.querySelectorAll<HTMLElement>('[data-range]')];
     const srcBtns = [...panel.querySelectorAll<HTMLButtonElement>('[data-src]')];
+    // modelli: nessuno scelto = tutti; più modelli scelti = uno qualsiasi di questi
+    const modelBtns = [...panel.querySelectorAll<HTMLButtonElement>('[data-model]')];
+    modelBtns.forEach((b) => b.addEventListener('click', () => { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); filter(); }));
     srcBtns.forEach((b) => b.addEventListener('click', () => { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); filter(); }));
 
     // Ordina (all'apertura: prezzo più basso); i monopattini senza valore vanno in fondo
@@ -182,9 +203,10 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
       });
       // provenienza: pulsanti "Monopattini.ch" / "tutti.ch" (attivi = mostrati)
       const on = srcBtns.filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.dataset.src);
+      const picked = modelBtns.filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.dataset.model!);
       let n = 0;
       cards.forEach((c) => {
-        const ok = (!srcBtns.length || on.includes(c.dataset.source!)) && limits.every(([k, a, b]) => { const v = num(c, k); return isNaN(v) || (v >= a && v <= b); });
+        const ok = (!picked.length || (c.dataset.models ?? '').split('|').some((m) => picked.includes(m))) && (!srcBtns.length || on.includes(c.dataset.source!)) && limits.every(([k, a, b]) => { const v = num(c, k); return isNaN(v) || (v >= a && v <= b); });
         c.hidden = !ok;
         if (ok) n++;
       });
@@ -207,6 +229,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         lo.value = lo.min; hi.value = hi.max;
       });
       srcBtns.forEach((s) => s.setAttribute('aria-pressed', 'true'));
+      modelBtns.forEach((m) => m.setAttribute('aria-pressed', 'false'));
       filter();
     }));
 

@@ -232,6 +232,12 @@ a { color: var(--accent); }
 .range-track input::-moz-range-track { background: none; }
 .range-track input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
 .range-track input::-moz-range-thumb { pointer-events: auto; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
+.model-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.model-chips button { font: inherit; font-size: .82rem; font-weight: 600; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.model-chips button:hover { border-color: var(--accent); }
+.model-chips small { color: var(--muted); font-weight: 500; margin-left: 2px; }
+.model-chips button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.model-chips button[aria-pressed='true'] small { color: rgb(255 255 255 / .8); }
 .tutti-sep { grid-column: 1 / -1; margin: 24px 0 4px; padding-top: 24px; border-top: 1px solid var(--line); }
 .tutti-sep[hidden] { display: none; }
 .tutti-sep h2 { font-size: 1.25rem; margin: 0 0 4px; }
