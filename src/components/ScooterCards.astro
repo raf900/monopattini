@@ -44,7 +44,10 @@ const modelsOf = (name) => {
   const n = name.replace(/\(.*?\)|\bx\d+\b|\bCH\b|\bXiaomi\b|\bMi\b/g, ' ').replace(/\s+/g, ' ').trim();
   return n.split(/\s*(?:\/|\bo\b)\s*/).map((m) => m.trim()).filter((m) => modelOrder.includes(m));
 };
-const allModels = [...list.map((s) => modelsOf(s.model)), ...tutti.map((a) => modelsOf(a.model))];
+// Annunci tutti.ch: autonomia, velocità e ruote stimate da un nostro monopattino dello stesso modello
+// ('Pro / Pro 2' → Pro; modelli che non vendiamo, es. Ninebot e Pro 3, restano senza dati)
+const like = (a) => { const m = modelsOf(a.model)[0]; return m && scooters.find((s) => modelsOf(s.model)[0] === m); };
+const allModels =[...list.map((s) => modelsOf(s.model)), ...tutti.map((a) => modelsOf(a.model))];
 const modelChips = modelOrder
   .map((m) => ({ m, n: allModels.filter((ms) => ms.includes(m)).length }))
   .filter((c) => c.n > 0);
@@ -154,7 +157,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         </div>
       )}
       {tutti.map((a) => (
-        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
+        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed={like(a) ? topSpeed(like(a)) : ''} data-wheel={like(a) ? wheel(like(a)) : ''} data-autonomia={like(a) ? autonomy(like(a)) : ''} data-score="">
           <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
             {a.img ? <img src={a.img} alt={a.model} loading="lazy" referrerpolicy="no-referrer" /> : <ScooterMark />}
           </a>
