@@ -291,7 +291,7 @@ a { color: var(--accent); }
 .teaser-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; padding: .85em 2em; }
 .teaser-card:hover .teaser-btn { transform: translate(-50%, calc(-50% - 2px)); box-shadow: 0 8px 28px -6px rgb(26 111 224 / .55); }
 
-/* Pagina usato */
+/* Pagina Compra */
 .page-top { padding-top: 56px; }
 .page-title { font-size: clamp(2rem, 4.5vw, 3rem); }
 .buy-groups { display: grid; gap: 12px; margin-top: 1rem; }

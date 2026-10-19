@@ -3,13 +3,13 @@ import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import { site, wa } from '../data/site.js';
 
-const nav = [['/usato', 'Monopattini'], ['/vendi', 'Vendi il tuo'], ['/sicurezza', 'Sicurezza']];
+const nav = [['/compra', 'Compra'], ['/vendi', 'Vendi'], ['/sicurezza', 'Sicurezza']];
 const path = Astro.url.pathname;
 
 // Icone del menu mobile (tratti SVG, viewBox 24×24).
 const icons = {
   '/': '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
-  '/usato': '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
+  '/compra': '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
   '/vendi': '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/>',
   '/sicurezza': '<path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
 };

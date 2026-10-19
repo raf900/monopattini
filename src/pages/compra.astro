@@ -46,7 +46,7 @@ const compare = {
 };
 ---
 <Layout
-  title="Monopattini usati — Monopattini.ch"
+  title="Compra un monopattino usato — Monopattini.ch"
   description="Monopattini elettrici usati controllati, testati e migliorati, e garantiti in Ticino. Filtra, confronta e scegli."
 >
   <section class="section page-top">
@@ -104,7 +104,7 @@ const compare = {
     if (picked.length < 2) return;
     table.style.setProperty('--cols', String(picked.length));
     table.innerHTML =
-      `<thead><tr><th></th>${picked.map((p: any) => `<th><a href="/usato/${p.slug}">${p.img ? `<img src="${p.img}" alt="">` : ''}<span>${esc(p.model)}</span></a></th>`).join('')}</tr></thead>` +
+      `<thead><tr><th></th>${picked.map((p: any) => `<th><a href="/compra/${p.slug}">${p.img ? `<img src="${p.img}" alt="">` : ''}<span>${esc(p.model)}</span></a></th>`).join('')}</tr></thead>` +
       `<tbody>${data.labels.map((l: string, r: number) => {
         // il migliore della riga (anche più di uno a pari merito); se sono tutti uguali, nessuno
         const vals = picked.map((p: any) => p.nums[r]).filter((v: number | null) => v != null);

@@ -26,15 +26,15 @@ const list = scooters.filter((s) => s.slug !== exclude && (!famiglia || s.famigl
 // Filtri a cursore: min e max presi dai monopattini in elenco (un filtro senza differenze non viene mostrato)
 const values = (fn) => list.map(fn).filter((v) => typeof v === 'number' && !isNaN(v));
 const prices = [...values((s) => s.price), ...tutti.map((a) => a.price)];
+const tuttiVals = (k) => tutti.map((a) => a[k]).filter((v) => typeof v === 'number');
 const filters = [
   { key: 'price', label: 'Prezzo', fmt: (v) => `CHF ${v}`, step: 10, vals: prices },
-  { key: 'year', label: 'Anno', fmt: (v) => `${v}`, step: 1, vals: values((s) => s.year) },
+  { key: 'year', label: 'Anno', fmt: (v) => `${v}`, step: 1, vals: [...values((s) => s.year), ...tuttiVals('year')] },
   { key: 'km', label: 'Km percorsi', fmt: (v) => `${v.toLocaleString('de-CH')} km`, step: 50, vals: values((s) => s.km) },
 ]
   // estremi arrotondati al passo del cursore, così nessun monopattino resta escluso all'apertura
   .map((f) => ({ ...f, min: Math.floor(Math.min(...f.vals) / f.step) * f.step, max: Math.ceil(Math.max(...f.vals) / f.step) * f.step }))
   .filter((f) => f.vals.length && f.min < f.max);
-const tuttiVals = (k) => tutti.map((a) => a[k]).filter((v) => typeof v === 'number');
 // Filtri a etichette (pochi valori possibili): si possono scegliere più valori; nessuno scelto = tutti
 const chipFilters = [
   { key: 'autonomia', label: 'Autonomia', fmt: (v) => `${v} km`, vals: [...values(autonomy), ...tuttiVals('autonomia')] },
@@ -55,7 +55,7 @@ const modelChips = modelOrder
   .filter((c) => c.n > 0);
 const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1', '#')]));
 ---
-{list.length === 0 && <p class="sub">Al momento non ci sono monopattini disponibili. <a href="/usato">Guarda quelli in arrivo</a>.</p>}
+{list.length === 0 && <p class="sub">Al momento non ci sono monopattini disponibili. <a href="/compra">Guarda quelli in arrivo</a>.</p>}
 <div class:list={[sortable && list.length > 1 && 'shop']}>
   {sortable && list.length > 1 && (
     <div class="sort-bar">
@@ -123,7 +123,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
     <div class="grid grid-3" data-sort-grid>
       {list.map((s) => {
         const img = photo(s.photos?.[0]);
-        const href = `/usato/${s.slug}`;
+        const href = `/compra/${s.slug}`;
         return (
           <article class="card scooter" data-source="mine" data-models={modelsOf(s.model).join('|')} data-price={s.price ?? ''} data-year={s.year ?? ''} data-km={s.km ?? ''} data-speed={topSpeed(s)} data-wheel={wheel(s)} data-autonomia={autonomy(s)} data-score={s.punteggio?.totale ?? ''}>
             <a href={href} class:list={['scooter-img', img && 'has-photo', /\.(png|webp)$/.test(s.photos?.[0] ?? '') && 'cutout']} aria-label={s.model}>
@@ -155,7 +155,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         );
       })}
       {tease && (
-        <a href="/usato" class="card scooter teaser-card" aria-label="Vedi tutti i monopattini">
+        <a href="/compra" class="card scooter teaser-card" aria-label="Vedi tutti i monopattini">
           <div class="teaser-blur" aria-hidden="true">
             <div class:list={['scooter-img', 'has-photo', /\.(png|webp)$/.test(tease.photos[0]) && 'cutout']}>
               <Image src={photo(tease.photos[0])} alt="" widths={[320]} sizes="240px" />
@@ -178,7 +178,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         </div>
       )}
       {tutti.map((a) => (
-        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed={a.velocita ?? ''} data-wheel={a.ruote ?? ''} data-autonomia={a.autonomia ?? ''} data-score="">
+        <article class="card scooter tutti-card" data-source="tutti" data-models={modelsOf(a.model).join('|')} data-price={a.price} data-year={a.year ?? ''} data-km={a.km ?? ''} data-speed={a.velocita ?? ''} data-wheel={a.ruote ?? ''} data-autonomia={a.autonomia ?? ''} data-score="">
           <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
             {a.img ? <img src={a.img} alt={a.model} loading="lazy" referrerpolicy="no-referrer" /> : <ScooterMark />}
           </a>
