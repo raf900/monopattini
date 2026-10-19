@@ -142,7 +142,7 @@ export const scooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-5', famiglia: 'xiaomi-10', model: 'Xiaomi Mi 5 Pro', photos: ['xiaomi-5-1.png', 'xiaomi-5-2.png', 'xiaomi-5-3.png', 'xiaomi-5-4.png', 'xiaomi-5-5.png', 'xiaomi-5-6.png'], status: 'disponibile',
+    slug: 'xiaomi-5', famiglia: 'xiaomi-10', model: 'Xiaomi Mi 5', photos: ['xiaomi-5-1.png', 'xiaomi-5-2.png', 'xiaomi-5-3.png', 'xiaomi-5-4.png', 'xiaomi-5-5.png', 'xiaomi-5-6.png'], status: 'disponibile',
     year: 2025, km: 2100, price: 300, condition: 'Come nuovo',
     velocita: 20, velocitaMax: '30 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { dataProduzione: '11.07.2025', dataBatteria: '26.02.2025', saluteBatteria: 98, cicliInteri: 55, tempoUtilizzo: '463 giorni' },
