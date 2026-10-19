@@ -215,7 +215,15 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
     };
 
     // Filtra: nasconde le card fuori dagli intervalli scelti (senza valore = sempre visibili)
-    const filter = () => {
+    // Dopo un filtro l'elenco può accorciarsi: se eri più in basso, il browser ti porterebbe fino al footer.
+    // Su desktop (filtri fissi a lato) si torna invece all'inizio dei risultati.
+    const shop = grid.closest<HTMLElement>('.shop')!;
+    const keepInView = () => {
+      if (matchMedia('(max-width: 900px)').matches) return;
+      const top = shop.getBoundingClientRect().top + scrollY - 90;
+      if (scrollY > top) scrollTo({ top, behavior: 'instant' });
+    };
+    const filter = (user = true) => {
       const limits = ranges.map((r) => {
         const lo = r.querySelector<HTMLInputElement>('[data-lo]')!, hi = r.querySelector<HTMLInputElement>('[data-hi]')!;
         const a = Number(lo.value), b = Number(hi.value);
@@ -235,6 +243,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
       if (sep) sep.hidden = !cards.some((c) => c.dataset.source === 'tutti' && !c.hidden);
       document.querySelector('[data-count]')!.textContent = `${n} monopattin${n === 1 ? 'o' : 'i'}`;
       document.querySelector<HTMLElement>('[data-empty]')!.hidden = n > 0;
+      if (user) keepInView();
     };
 
     // Doppio cursore: il minimo non supera il massimo e viceversa
@@ -264,7 +273,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
 
     sel.addEventListener('change', sort);
     sort();
-    filter();
+    filter(false);
 
     // L'elenco è alto almeno quanto la colonna dei filtri (non di più: con pochi risultati la pagina si accorcia)
     const main = grid.closest<HTMLElement>('.shop-main')!;
