@@ -10,14 +10,13 @@ export const site = {
   email: 'info@monopattini.ch', // TODO: verificare che la casella esista
   instagram: 'monopattini.ch', // TODO: nome Instagram reale
   hours: [
-    ['Lun – Ven', '09:00 – 12:00 · 14:00 – 18:30'], // TODO
-    ['Sabato', '09:00 – 16:00'],
-    ['Domenica', 'Chiuso'],
+    ['Lun – Dom', '09:00 – 19:00'],
   ],
 };
 
 // Monopattini usati in vendita — aggiungere, modificare o rimuovere voci qui.
 // Ogni monopattino ha una pagina propria: /usato/<slug>
+//   inEvidenza  true = compare in home (sezione "Disponibili ora")
 //   nascosto    true = non compare sul sito (né nelle liste né con una pagina propria)
 //   famiglia    stessa struttura/telaio: in "Altri monopattini" si vedono solo quelli della stessa famiglia
 //   photos      file in src/assets/ — il primo è la foto principale
@@ -122,7 +121,7 @@ const allScooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-4-pro', famiglia: 'xiaomi-10', model: 'Xiaomi Mi 4 Pro (2nd Gen)', photos: ['xiaomi-4-pro-1.png', 'xiaomi-4-pro-2.png', 'xiaomi-4-pro-3.png', 'xiaomi-4-pro-4.png', 'xiaomi-4-pro-5.png', 'xiaomi-4-pro-6.png', 'xiaomi-4-pro-7.png', 'xiaomi-4-pro-8.webp'], status: 'disponibile',
+    slug: 'xiaomi-4-pro', inEvidenza: true, famiglia: 'xiaomi-10', model: 'Xiaomi Mi 4 Pro (2nd Gen)', photos: ['xiaomi-4-pro-1.png', 'xiaomi-4-pro-2.png', 'xiaomi-4-pro-3.png', 'xiaomi-4-pro-4.png', 'xiaomi-4-pro-5.png', 'xiaomi-4-pro-6.png', 'xiaomi-4-pro-7.png', 'xiaomi-4-pro-8.webp'], status: 'disponibile',
     year: 2025, km: 1500, price: 200, condition: 'Molto buono',
     velocita: 20, velocitaMax: '30 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { dataProduzione: '04.04.2025', dataBatteria: '02.01.2024', saluteBatteria: 98, cicliInteri: 51, tempoUtilizzo: '562 giorni' },
@@ -143,7 +142,7 @@ const allScooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-5', famiglia: 'xiaomi-10', model: 'Xiaomi Mi 5', photos: ['xiaomi-5-1.png', 'xiaomi-5-2.png', 'xiaomi-5-3.png', 'xiaomi-5-4.png', 'xiaomi-5-5.png', 'xiaomi-5-6.png'], status: 'disponibile',
+    slug: 'xiaomi-5', inEvidenza: true, famiglia: 'xiaomi-10', model: 'Xiaomi Mi 5', photos: ['xiaomi-5-1.png', 'xiaomi-5-2.png', 'xiaomi-5-3.png', 'xiaomi-5-4.png', 'xiaomi-5-5.png', 'xiaomi-5-6.png'], status: 'disponibile',
     year: 2025, km: 2100, price: 300, condition: 'Come nuovo',
     velocita: 20, velocitaMax: '30 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { dataProduzione: '11.07.2025', dataBatteria: '26.02.2025', saluteBatteria: 98, cicliInteri: 55, tempoUtilizzo: '463 giorni' },

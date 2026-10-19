@@ -247,6 +247,7 @@ a { color: var(--accent); }
 .src-btns button { font: inherit; font-size: .85rem; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; cursor: pointer; }
 .src-btns button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
 .src-btns button[data-src='tutti'][aria-pressed='true'] { background: #ed2c28; border-color: #ed2c28; }
+.filters-apply { display: none; width: 100%; margin-top: 14px; border: 0; font: inherit; font-weight: 600; text-align: center; cursor: pointer; }
 .filters-toggle { display: none; font: inherit; font-size: .9rem; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
 /* Confronto monopattini (pagina Usato) */
 .cmp-section { scroll-margin-top: 70px; padding-top: 48px; }
@@ -284,6 +285,11 @@ a { color: var(--accent); }
 .scooter-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .big-price { font-family: var(--display); font-size: 1.35rem; font-weight: 700; }
 .note { margin-top: 2rem; color: var(--muted); }
+/* home: card sfocata con il pulsante "Vedi tutti" davanti */
+.teaser-card { position: relative; overflow: hidden; text-decoration: none; color: inherit; }
+.teaser-blur { display: flex; flex-direction: column; flex: 1; filter: blur(3px); opacity: .8; pointer-events: none; user-select: none; }
+.teaser-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; padding: .85em 2em; }
+.teaser-card:hover .teaser-btn { transform: translate(-50%, calc(-50% - 2px)); box-shadow: 0 8px 28px -6px rgb(26 111 224 / .55); }
 
 /* Pagina usato */
 .page-top { padding-top: 56px; }
@@ -334,6 +340,13 @@ a { color: var(--accent); }
   .filters { position: static; display: none; }
   .filters.open { display: block; }
   .filters-toggle { display: inline-block; }
+  .filters-apply { display: block; }
+  /* tablet e telefono (2 colonne): la card "Vedi tutti", da sola sull'ultima riga, al centro */
+  .grid-3 .teaser-card { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); }
+  /* telefono: Filtri, Confronta e ordinamento su una riga; il numero è nel pulsante dei filtri */
+  .sort-bar { display: grid; grid-template-columns: auto auto 1fr; }
+  .sort-count, .sort-bar label { display: none; }
+  .sort-bar select { width: 100%; min-width: 0; }
   /* menu laterale anche su tablet: con 4 voci il menu in alto non ci sta più */
   .nav nav, .nav-wa { display: none; }
   .menu-btn { display: flex; }
@@ -355,7 +368,7 @@ a { color: var(--accent); }
   .logo-word, .logo .logo-mark { font-size: 1.05rem; }
   .hero { padding: 48px 0 28px; }
   .section { padding: 64px 0; }
-  .grid-3, .shop .grid-3 { grid-template-columns: 1fr; }
+  .grid-3, .shop .grid-3 { grid-template-columns: 1fr 1fr; }
   /* telefono: card un po' più strette e foto più bassa */
   .grid-3 .scooter { width: 100%; max-width: 310px; margin-inline: auto; padding: 14px; }
   .grid-3 .scooter-img.has-photo { aspect-ratio: 16 / 11; }
@@ -371,6 +384,8 @@ a { color: var(--accent); }
   .grid-3 .scooter-foot { flex-direction: column; align-items: stretch; gap: 6px; }
   .grid-3 .scooter-foot .btn { text-align: center; }
   .grid-3 .big-price { font-size: 1rem; }
+  /* home: la card "Vedi tutti", da sola sull'ultima riga, al centro */
+  .grid-3 .teaser-card { grid-column: 1 / -1; justify-self: center; width: calc(50% - 5px); }
   .shop .cmp-pick { font-size: .72rem; padding: 6px; }
   /* telefono: i passi diventano card che scorrono in orizzontale, la successiva si intravede */
   .steps {

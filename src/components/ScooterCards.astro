@@ -7,17 +7,21 @@ import { photo } from '../data/photos.js';
 // exclude: slug da non mostrare (es. il monopattino della pagina corrente)
 // famiglia: mostra solo i monopattini con la stessa struttura (pagina del monopattino)
 // onlyAvailable: mostra solo quelli 'disponibile' (usato in home)
+// featured: mostra solo quelli con inEvidenza: true (home)
+// teaser: aggiunge in fondo un monopattino sfocato con il pulsante "Vedi tutti" (link alla pagina Usato)
 // sortable: mostra "Ordina per" e i filtri a cursore (pagina Usato)
 // withTutti: aggiunge in fondo le card degli annunci di privati su tutti.ch (si aprono su tutti.ch)
-const { exclude, famiglia, onlyAvailable = false, sortable = false, withTutti = false } = Astro.props;
+const { exclude, famiglia, onlyAvailable = false, featured = false, teaser = false, sortable = false, withTutti = false } = Astro.props;
 const tutti = withTutti ? tuttiAds : [];
+// monopattino mostrato sfocato dietro "Vedi tutti": il primo disponibile che non è già in elenco
+const tease = teaser ? scooters.find((s) => s.status === 'disponibile' && !s.inEvidenza && photo(s.photos?.[0])) : null;
 // numero dalla velocità su strade private ("45 km/h" → 45); se manca, quella legale
 const topSpeed = (s) => parseInt(s.velocitaMax) || s.velocita || 0;
 // grandezza ruote dalla scheda tecnica ('8,5" con camera d’aria' → 8.5)
 const wheel = (s) => parseFloat((s.specs?.find(([k]) => k === 'Pneumatici')?.[1] ?? '').replace(',', '.')) || '';
 // autonomia dichiarata dalla scheda tecnica ('45 km' → 45)
 const autonomy = (s) => parseInt(s.specs?.find(([k]) => k === 'Autonomia dichiarata')?.[1] ?? '') || '';
-const list = scooters.filter((s) => s.slug !== exclude && (!famiglia || s.famiglia === famiglia) && (!onlyAvailable || s.status === 'disponibile'));
+const list = scooters.filter((s) => s.slug !== exclude && (!famiglia || s.famiglia === famiglia) && (!onlyAvailable || s.status === 'disponibile') && (!featured || s.inEvidenza));
 
 // Filtri a cursore: min e max presi dai monopattini in elenco (un filtro senza differenze non viene mostrato)
 const values = (fn) => list.map(fn).filter((v) => typeof v === 'number' && !isNaN(v));
@@ -110,6 +114,8 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
           </div>
         </div>
       ))}
+      <!-- telefono: chiude i filtri e porta ai risultati -->
+      <button type="button" class="btn filters-apply" data-apply>Mostra {list.length + tutti.length} monopattini</button>
     </aside>
   )}
 
@@ -148,6 +154,23 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
           </article>
         );
       })}
+      {tease && (
+        <a href="/usato" class="card scooter teaser-card" aria-label="Vedi tutti i monopattini">
+          <div class="teaser-blur" aria-hidden="true">
+            <div class:list={['scooter-img', 'has-photo', /\.(png|webp)$/.test(tease.photos[0]) && 'cutout']}>
+              <Image src={photo(tease.photos[0])} alt="" widths={[320]} sizes="240px" />
+            </div>
+            <h3>{tease.model}</h3>
+            <ul class="specs">
+              {tease.year && <li><small>Anno</small> {tease.year}</li>}
+              {autonomy(tease) && <li><small>Autonomia</small> {autonomy(tease)} km</li>}
+              {tease.velocita && <li><small>Velocità</small> {tease.velocita} km/h</li>}
+            </ul>
+            <div class="scooter-foot"><span class="big-price">{chf(tease.price)}</span></div>
+          </div>
+          <span class="btn teaser-btn">Vedi tutti</span>
+        </a>
+      )}
       {tutti.length > 0 && (
         <div class="tutti-sep" data-tutti-sep>
           <h2>Annunci di privati su tutti.ch</h2>
@@ -189,6 +212,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
     const show = (k: string, v: number) => fmts[k].replace('#', k === 'wheel' ? String(v).replace('.', ',') : k === 'km' ? v.toLocaleString('de-CH') : String(v));
     const ranges = [...panel.querySelectorAll<HTMLElement>('[data-range]')];
     const srcBtns = [...panel.querySelectorAll<HTMLButtonElement>('[data-src]')];
+    const applyBtn = panel.querySelector<HTMLButtonElement>('[data-apply]')!;
     // modelli: nessuno scelto = tutti; più modelli scelti = uno qualsiasi di questi
     const modelBtns = [...panel.querySelectorAll<HTMLButtonElement>('[data-model]')];
     modelBtns.forEach((b) => b.addEventListener('click', () => { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); filter(); }));
@@ -239,6 +263,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
       });
       if (sep) sep.hidden = !cards.some((c) => c.dataset.source === 'tutti' && !c.hidden);
       document.querySelector('[data-count]')!.textContent = `${n} monopattin${n === 1 ? 'o' : 'i'}`;
+      applyBtn.textContent = `Mostra ${n} monopattin${n === 1 ? 'o' : 'i'}`;
       document.querySelector<HTMLElement>('[data-empty]')!.hidden = n > 0;
       if (user) keepInView();
     };
@@ -263,6 +288,11 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
 
     // Telefono: i filtri si aprono con il pulsante "Filtri"
     const toggle = document.querySelector<HTMLButtonElement>('[data-filters-toggle]')!;
+    applyBtn.addEventListener('click', () => {
+      panel.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      scrollTo({ top: grid.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' });
+    });
     toggle.addEventListener('click', () => {
       const open = panel.classList.toggle('open');
       toggle.setAttribute('aria-expanded', String(open));
