@@ -23,7 +23,7 @@ export const site = {
 //   status      'disponibile' (verde), 'arrivo' (arancione), 'esaurito' (rosso)
 //   year        anno di uscita del modello; year, km e condition sono facoltativi
 //   price       prezzo di vendita in CHF; null = "Prezzo su richiesta"
-//   diagnosi    dati letti dal monopattino (chip, batteria, cicli, tempi) — campi facoltativi
+//   diagnosi    dati letti dal monopattino (chip, data di produzione, batteria, cicli, tempi) — campi facoltativi
 //   ricambi     ricambi sostituiti o migliorati: ['Nome', prezzo] (prezzo facoltativo)
 //   punteggio   valutazione da 1 a 10: { totale, batteria, freni, gomme, estetica, elettronica }
 //   velocita    velocità legale su strada (20 km/h in Svizzera); velocitaMax tra parentesi "strade private"
@@ -33,7 +33,7 @@ export const site = {
 //   description, work (revisione effettuata), included — TODO: testi segnaposto
 export const scooters = [
   {
-    slug: 'xiaomi-essential', famiglia: 'xiaomi-classic', model: 'Xiaomi Essential', photos: ['xiaomi-essential-1.webp', 'xiaomi-essential-2.webp', 'xiaomi-essential-3.webp', 'xiaomi-essential-4.webp', 'xiaomi-essential-5.webp'], status: 'disponibile',
+    slug: 'xiaomi-essential', famiglia: 'xiaomi-classic', model: 'Xiaomi Mi Essential', photos: ['xiaomi-essential-1.webp', 'xiaomi-essential-2.webp', 'xiaomi-essential-3.webp', 'xiaomi-essential-4.webp', 'xiaomi-essential-5.webp'], status: 'disponibile',
     year: 2022, km: 70, price: 140, condition: 'Come nuovo',
     velocita: 20, velocitaMax: '40 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { chip: 'GD32E', dataBatteria: '01.11.2022', saluteBatteria: 98, cicliInteri: 8, cicliParziali: 14, tempoAcceso: '12 h 4 min', tempoGuida: '6 h 10 min' },
@@ -55,13 +55,13 @@ export const scooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-1s', famiglia: 'xiaomi-classic', model: 'Xiaomi 1S', photos: ['xiaomi-1s-1.webp', 'xiaomi-1s-2.webp', 'xiaomi-1s-3.png', 'xiaomi-1s-4.png', 'xiaomi-1s-5.png', 'xiaomi-1s-6.png', 'xiaomi-1s-7.webp'], status: 'disponibile',
-    year: 2020, km: 800, price: 150, condition: 'Molto buono',
-    velocita: 20, velocitaMax: '40 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
-    diagnosi: { saluteBatteria: 92 } /* TODO: dati diagnosi reali */,
+    slug: 'xiaomi-1s', famiglia: 'xiaomi-classic', model: 'Xiaomi Mi 1S', photos: ['xiaomi-1s-1.webp', 'xiaomi-1s-2.webp', 'xiaomi-1s-3.png', 'xiaomi-1s-4.png', 'xiaomi-1s-5.png', 'xiaomi-1s-6.png', 'xiaomi-1s-7.webp'], status: 'disponibile',
+    year: 2020, km: 881, price: 150, condition: 'Molto buono',
+    velocita: 20, velocitaMax: '45 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
+    diagnosi: { chip: 'STM32F', dataBatteria: '01.04.2020', saluteBatteria: 98, cicliInteri: 50, cicliParziali: 155, tempoAcceso: '5 g 19 h 38 min', tempoGuida: '2 g 7 h 51 min' },
     specs: [
       ['Motore', '250 W'],
-      ['Batteria', '36 V – 7650 mAh'],
+      ['Batteria', '36 V – 7800 mAh'],
       ['Autonomia dichiarata', '30 km'],
       ['Pneumatici', '8,5" con camera d’aria'],
       ['Freni', 'Disco posteriore + E-ABS anteriore'],
@@ -77,13 +77,13 @@ export const scooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-pro', famiglia: 'xiaomi-classic', model: 'Xiaomi Pro', photos: ['xiaomi-pro-1.png', 'xiaomi-pro-2.png', 'xiaomi-pro-3.png', 'xiaomi-pro-4.png', 'xiaomi-pro-5.png', 'xiaomi-pro-6.png'], status: 'disponibile',
+    slug: 'xiaomi-pro', famiglia: 'xiaomi-classic', model: 'Xiaomi Mi Pro', photos: ['xiaomi-pro-1.png', 'xiaomi-pro-2.png', 'xiaomi-pro-3.png', 'xiaomi-pro-4.png', 'xiaomi-pro-5.png', 'xiaomi-pro-6.png'], status: 'disponibile',
     year: 2019, km: 1115, price: 150, condition: 'Molto buono',
     velocita: 20, velocitaMax: '45 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { chip: 'STM32F', dataBatteria: '30.05.2019', saluteBatteria: 98, cicliInteri: 55, cicliParziali: 148, tempoAcceso: '23 g 12 h 8 min', tempoGuida: '6 g 20 h 19 min' },
     specs: [
       ['Motore', '300 W'],
-      ['Batteria', '36 V – 474 Wh'],
+      ['Batteria', '36 V – 12800 mAh'],
       ['Autonomia dichiarata', '45 km'],
       ['Pneumatici', '8,5" con camera d’aria'],
       ['Freni', 'Disco posteriore + E-ABS anteriore'],
@@ -99,13 +99,13 @@ export const scooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-pro-2', famiglia: 'xiaomi-classic', model: 'Xiaomi Pro 2', photos: ['xiaomi-pro-1.png', 'xiaomi-pro-2.png', 'xiaomi-pro-3.png', 'xiaomi-pro-4.png', 'xiaomi-pro-5.png', 'xiaomi-pro-6.png'], status: 'disponibile',
+    slug: 'xiaomi-pro-2', famiglia: 'xiaomi-classic', model: 'Xiaomi Mi Pro 2', photos: ['xiaomi-pro-1.png', 'xiaomi-pro-2.png', 'xiaomi-pro-3.png', 'xiaomi-pro-4.png', 'xiaomi-pro-5.png', 'xiaomi-pro-6.png'], status: 'disponibile',
     year: 2021, km: 900, price: 160, condition: 'Molto buono',
     velocita: 20, velocitaMax: '45 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { chip: 'STM32F', dataBatteria: '04.10.2021', saluteBatteria: 98, cicliInteri: 92, cicliParziali: 252, tempoAcceso: '23 g 12 h 7 min', tempoGuida: '7 g 17 h 1 min' },
     specs: [
       ['Motore', '300 W (picco 600 W)'],
-      ['Batteria', '36 V – 474 Wh'],
+      ['Batteria', '36 V – 12400 mAh'],
       ['Autonomia dichiarata', '45 km'],
       ['Pneumatici', '8,5" con camera d’aria'],
       ['Freni', 'Disco posteriore + E-ABS anteriore'],
@@ -121,13 +121,13 @@ export const scooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-4-pro', famiglia: 'xiaomi-10', model: 'Xiaomi 4 Pro (2nd Gen)', photos: ['xiaomi-4-pro-1.png', 'xiaomi-4-pro-2.png', 'xiaomi-4-pro-3.png', 'xiaomi-4-pro-4.png', 'xiaomi-4-pro-5.png', 'xiaomi-4-pro-6.png', 'xiaomi-4-pro-7.png', 'xiaomi-4-pro-8.webp'], status: 'disponibile',
+    slug: 'xiaomi-4-pro', famiglia: 'xiaomi-10', model: 'Xiaomi Mi 4 Pro (2nd Gen)', photos: ['xiaomi-4-pro-1.png', 'xiaomi-4-pro-2.png', 'xiaomi-4-pro-3.png', 'xiaomi-4-pro-4.png', 'xiaomi-4-pro-5.png', 'xiaomi-4-pro-6.png', 'xiaomi-4-pro-7.png', 'xiaomi-4-pro-8.webp'], status: 'disponibile',
     year: 2025, km: 1500, price: 200, condition: 'Molto buono',
     velocita: 20, velocitaMax: '30 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
-    diagnosi: { dataBatteria: '02.01.2024', saluteBatteria: 98, cicliInteri: 51, tempoUtilizzo: '562 giorni' },
+    diagnosi: { dataProduzione: '04.04.2025', dataBatteria: '02.01.2024', saluteBatteria: 98, cicliInteri: 51, tempoUtilizzo: '562 giorni' },
     specs: [
       ['Motore', '400 W (picco 1000 W)'],
-      ['Batteria', '48 V – 468 Wh'],
+      ['Batteria', '48 V – 10200 mAh'],
       ['Autonomia dichiarata', '60 km'],
       ['Pneumatici', '10" tubeless'],
       ['Freni', 'Tamburo + E-ABS'],
@@ -142,13 +142,13 @@ export const scooters = [
     video: '',
   },
   {
-    slug: 'xiaomi-5', famiglia: 'xiaomi-10', model: 'Xiaomi 5', photos: ['xiaomi-5-1.png', 'xiaomi-5-2.png', 'xiaomi-5-3.png', 'xiaomi-5-4.png', 'xiaomi-5-5.png', 'xiaomi-5-6.png'], status: 'disponibile',
+    slug: 'xiaomi-5', famiglia: 'xiaomi-10', model: 'Xiaomi Mi 5 Pro', photos: ['xiaomi-5-1.png', 'xiaomi-5-2.png', 'xiaomi-5-3.png', 'xiaomi-5-4.png', 'xiaomi-5-5.png', 'xiaomi-5-6.png'], status: 'disponibile',
     year: 2025, km: 2100, price: 300, condition: 'Come nuovo',
     velocita: 20, velocitaMax: '30 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
-    diagnosi: { dataBatteria: '26.02.2025', saluteBatteria: 98, cicliInteri: 55, tempoUtilizzo: '463 giorni' },
+    diagnosi: { dataProduzione: '11.07.2025', dataBatteria: '26.02.2025', saluteBatteria: 98, cicliInteri: 55, tempoUtilizzo: '463 giorni' },
     specs: [
       ['Motore', '350 W (picco 700 W)'],
-      ['Batteria', '477 Wh (10,2 Ah)'],
+      ['Batteria', '48 V – 10200 mAh'],
       ['Autonomia dichiarata', '60 km'],
       ['Pneumatici', '10" tubeless'],
       ['Freni', 'Tamburo + E-ABS'],

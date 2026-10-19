@@ -116,6 +116,12 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
           </article>
         );
       })}
+      {tutti.length > 0 && (
+        <div class="tutti-sep" data-tutti-sep>
+          <h2>Annunci di privati su tutti.ch</h2>
+          <p>Monopattini venduti da privati: si aprono su tutti.ch.</p>
+        </div>
+      )}
       {tutti.map((a) => (
         <article class="card scooter tutti-card" data-source="tutti" data-price={a.price} data-year="" data-km={a.km ?? ''} data-speed="" data-wheel="" data-autonomia="" data-score="">
           <a href={a.url} target="_blank" rel="noopener" class:list={['scooter-img', a.img && 'has-photo tutti-photo']} aria-label={`${a.model} su tutti.ch`}>
@@ -144,7 +150,8 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
   const panel = document.querySelector<HTMLElement>('[data-filters]');
 
   if (grid && sel && panel) {
-    const cards = [...grid.children] as HTMLElement[];
+    const cards = [...grid.querySelectorAll<HTMLElement>('.scooter')];
+    const sep = grid.querySelector<HTMLElement>('[data-tutti-sep]');
     const num = (el: HTMLElement, k: string) => (el.dataset[k] === '' ? NaN : Number(el.dataset[k]));
     const fmts: Record<string, string> = JSON.parse(panel.dataset.fmts!);
     const show = (k: string, v: number) => fmts[k].replace('#', k === 'wheel' ? String(v).replace('.', ',') : k === 'km' ? v.toLocaleString('de-CH') : String(v));
@@ -155,12 +162,14 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
     // Ordina (all'apertura: prezzo più basso); i monopattini senza valore vanno in fondo
     const sort = () => {
       const [key, dir] = sel.value.split('-');
-      grid.append(...[...cards].sort((a, b) => {
+      const sorted = [...cards].sort((a, b) => {
         const x = num(a, key), y = num(b, key);
         if (isNaN(x)) return 1;
         if (isNaN(y)) return -1;
         return dir === 'asc' ? x - y : y - x;
-      }));
+      });
+      // prima i nostri, poi il separatore e gli annunci di tutti.ch
+      grid.append(...sorted.filter((c) => c.dataset.source !== 'tutti'), ...(sep ? [sep] : []), ...sorted.filter((c) => c.dataset.source === 'tutti'));
     };
 
     // Filtra: nasconde le card fuori dagli intervalli scelti (senza valore = sempre visibili)
@@ -179,6 +188,7 @@ const fmts = Object.fromEntries(filters.map((f) => [f.key, f.fmt(1).replace('1',
         c.hidden = !ok;
         if (ok) n++;
       });
+      if (sep) sep.hidden = !cards.some((c) => c.dataset.source === 'tutti' && !c.hidden);
       document.querySelector('[data-count]')!.textContent = `${n} monopattin${n === 1 ? 'o' : 'i'}`;
       document.querySelector<HTMLElement>('[data-empty]')!.hidden = n > 0;
     };

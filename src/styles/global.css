@@ -232,6 +232,10 @@ a { color: var(--accent); }
 .range-track input::-moz-range-track { background: none; }
 .range-track input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
 .range-track input::-moz-range-thumb { pointer-events: auto; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 3px solid var(--card); box-shadow: 0 0 0 1px var(--accent); cursor: grab; }
+.tutti-sep { grid-column: 1 / -1; margin: 24px 0 4px; padding-top: 24px; border-top: 1px solid var(--line); }
+.tutti-sep[hidden] { display: none; }
+.tutti-sep h2 { font-size: 1.25rem; margin: 0 0 4px; }
+.tutti-sep p { color: var(--muted); font-size: .9rem; margin: 0; }
 .src-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .src-btns button { font: inherit; font-size: .85rem; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; cursor: pointer; }
 .src-btns button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -322,11 +326,7 @@ a { color: var(--accent); }
   .shop > .filters.open { margin-bottom: 18px; }
   .filters { position: static; display: none; }
   .filters.open { display: block; }
-  .src-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.src-btns button { font: inherit; font-size: .85rem; font-weight: 600; color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; cursor: pointer; }
-.src-btns button[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
-.src-btns button[data-src='tutti'][aria-pressed='true'] { background: #ed2c28; border-color: #ed2c28; }
-.filters-toggle { display: inline-block; }
+  .filters-toggle { display: inline-block; }
   /* menu laterale anche su tablet: con 4 voci il menu in alto non ci sta più */
   .nav nav, .nav-wa { display: none; }
   .menu-btn { display: flex; }

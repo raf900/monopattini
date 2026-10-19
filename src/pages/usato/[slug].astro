@@ -34,6 +34,7 @@ const d = s.diagnosi ?? {};
 const diag = [
   d.saluteBatteria && ['Salute batteria', `${d.saluteBatteria}%`],
   d.autonomia && ['Autonomia', d.autonomia],
+  d.dataProduzione && ['Data di produzione', d.dataProduzione],
   d.dataBatteria && ['Data batteria', d.dataBatteria],
   d.cicliInteri != null && ['Cicli di carica completi', d.cicliInteri],
   d.cicliParziali != null && ['Cicli di carica parziali', d.cicliParziali],
