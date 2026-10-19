@@ -18,6 +18,7 @@ export const site = {
 
 // Monopattini usati in vendita — aggiungere, modificare o rimuovere voci qui.
 // Ogni monopattino ha una pagina propria: /usato/<slug>
+//   nascosto    true = non compare sul sito (né nelle liste né con una pagina propria)
 //   famiglia    stessa struttura/telaio: in "Altri monopattini" si vedono solo quelli della stessa famiglia
 //   photos      file in src/assets/ — il primo è la foto principale
 //   status      'disponibile' (verde), 'arrivo' (arancione), 'esaurito' (rosso)
@@ -31,9 +32,9 @@ export const site = {
 //   video       facoltativo: link YouTube oppure file in public/video/ (es. '/video/pro2.mp4')
 //   specs       scheda tecnica [etichetta, valore] — dati del produttore, TODO: verificare
 //   description, work (revisione effettuata), included — TODO: testi segnaposto
-export const scooters = [
+export const allScooters = [
   {
-    slug: 'xiaomi-essential', famiglia: 'xiaomi-classic', model: 'Xiaomi Mi Essential', photos: ['xiaomi-essential-1.webp', 'xiaomi-essential-2.webp', 'xiaomi-essential-3.webp', 'xiaomi-essential-4.webp', 'xiaomi-essential-5.webp'], status: 'disponibile',
+    slug: 'xiaomi-essential', nascosto: true, famiglia: 'xiaomi-classic', model: 'Xiaomi Mi Essential', photos: ['xiaomi-essential-1.webp', 'xiaomi-essential-2.webp', 'xiaomi-essential-3.webp', 'xiaomi-essential-4.webp', 'xiaomi-essential-5.webp'], status: 'disponibile',
     year: 2022, km: 70, price: 140, condition: 'Come nuovo',
     velocita: 20, velocitaMax: '40 km/h', // 20 km/h = limite legale su strada; velocitaMax su strade private
     diagnosi: { chip: 'GD32E', dataBatteria: '01.11.2022', saluteBatteria: 98, cicliInteri: 8, cicliParziali: 14, tempoAcceso: '12 h 4 min', tempoGuida: '6 h 10 min' },
@@ -165,6 +166,8 @@ export const scooters = [
     video: '',
   },
 ];
+
+export const scooters = allScooters.filter((s) => !s.nascosto);
 
 // "20 km/h (45 km/h strade private)"
 export const speedLabel = (sc) => `${sc.velocita} km/h` + (sc.velocitaMax ? ` (${sc.velocitaMax} strade private)` : '');
