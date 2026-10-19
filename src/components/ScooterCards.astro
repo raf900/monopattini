@@ -45,8 +45,9 @@ const modelsOf = (name) => {
   return n.split(/\s*(?:\/|\bo\b)\s*/).map((m) => m.trim()).filter((m) => modelOrder.includes(m));
 };
 // Annunci tutti.ch: autonomia, velocità e ruote stimate da un nostro monopattino dello stesso modello
-// ('Pro / Pro 2' → Pro; modelli che non vendiamo, es. Ninebot e Pro 3, restano senza dati)
-const like = (a) => { const m = modelsOf(a.model)[0]; return m && scooters.find((s) => modelsOf(s.model)[0] === m); };
+// ('Pro / Pro 2' → Pro; il Pro 3 è uguale al Pro 2; i Ninebot restano senza dati)
+const sameAs = { 'Pro 3': 'Pro 2' };
+const like = (a) => { let m = modelsOf(a.model)[0]; m = sameAs[m] ?? m; return m && scooters.find((s) => modelsOf(s.model)[0] === m); };
 const allModels =[...list.map((s) => modelsOf(s.model)), ...tutti.map((a) => modelsOf(a.model))];
 const modelChips = modelOrder
   .map((m) => ({ m, n: allModels.filter((ms) => ms.includes(m)).length }))
