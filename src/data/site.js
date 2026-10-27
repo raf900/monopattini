@@ -4,7 +4,8 @@ export const chf = (n) => (n == null ? 'Prezzo su richiesta' : `CHF ${n.toLocale
 
 export const site = {
   name: 'Monopattini.ch',
-  tagline: 'Monopattini elettrici usati, controllati e garantiti',
+  tagline: 'Riparazione e vendita di mezzi elettrici in Ticino',
+  slogan: 'Se va a batteria, lo sistemiamo.',
   phone: '+41 79 453 05 76',
   whatsapp: '41794530576', // numero senza "+" e spazi, per il link wa.me
   email: 'info@monopattini.ch', // TODO: verificare che la casella esista
@@ -273,3 +274,34 @@ export const tuttiAds = [
   { id: '83018665', path: 'biciclette/vendo-usato-pochissimo-monopattino-elettrico', model: 'Xiaomi Pro / Pro 2', price: 180, loc: 'Lugano', year: 2019, autonomia: 45, velocita: 45, ruote: 8.5, img: tuttiImg('6070075758') },
   { id: '83150699', path: 'altri-sport/monopattino-elettrico', model: 'Xiaomi 4 Pro', price: 170, loc: 'Lugano', year: 2025, autonomia: 60, velocita: 30, ruote: 10, img: tuttiImg('9679261797') },
 ].map((a) => ({ ...a, url: `${tuttiBase}${a.path}/${a.id}` }));
+
+// Riparazioni: mezzi che ripariamo (icona = tratti SVG 24×24) e problemi più comuni per ognuno.
+// Il visitatore sceglie il mezzo e i problemi, poi manda la richiesta di preventivo su WhatsApp.
+export const repairVehicles = [
+  { id: 'monopattino', label: 'Monopattino', nome: 'un monopattino elettrico', tuo: 'il tuo monopattino',
+    icon: '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme / foratura', 'Luci', 'Display / elettronica', 'Acceleratore', 'Chiusura / piantone', 'Sospensioni', 'Non si accende', 'Rumori'] },
+  { id: 'scooter', label: 'Scooter elettrico', nome: 'uno scooter elettrico', tuo: 'il tuo scooter',
+    icon: '<circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7.5l2-6H21M15 6h3l-.5 5.5M3 13.5h7l1.5 4"/>',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme / foratura', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende', 'Rumori'] },
+  { id: 'moto', label: 'Moto elettrica', nome: 'una moto elettrica', tuo: 'la tua moto',
+    icon: '<circle cx="5" cy="16" r="3"/><circle cx="19" cy="16" r="3"/><path d="M5 16 9 9h5l3 3h2M14 9l-2 7H8M16 6h2.5"/><path d="m11 5-1.5 2.5h2L10 10"/>',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme / foratura', 'Catena / trasmissione', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende'] },
+  { id: 'hoverboard', label: 'Hoverboard', nome: 'un hoverboard', tuo: 'il tuo hoverboard',
+    icon: '<rect x="2" y="9" width="20" height="6" rx="3"/><circle cx="4.5" cy="17" r="2"/><circle cx="19.5" cy="17" r="2"/><path d="M9 12h6"/>',
+    problems: ['Batteria', 'Caricatore', 'Motore ruota', 'Sensori / equilibrio', 'Scheda elettronica', 'Gomme', 'Carrozzeria', 'Non si accende', 'Rumori'] },
+  { id: 'monoruota', label: 'Monoruota', nome: 'una monoruota', tuo: 'la tua monoruota',
+    icon: '<circle cx="12" cy="14" r="7"/><circle cx="12" cy="14" r="2"/><path d="M8 6.5 9.5 3h5L16 6.5"/>',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Gomma / foratura', 'Firmware / app', 'Pedane', 'Non si accende', 'Rumori'] },
+  { id: 'altro', label: 'Altro mezzo elettrico', nome: 'un mezzo elettrico', tuo: 'il tuo mezzo',
+    icon: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Elettronica', 'Non si accende', 'Altro'] },
+];
+
+// Come funziona una riparazione (pagina Riparazioni)
+export const repairSteps = [
+  { title: 'Contattaci', text: 'Scegli il mezzo e il problema e scrivici su WhatsApp.' },
+  { title: 'Diagnosi', text: 'Controlliamo il mezzo e ti diamo un preventivo chiaro.' },
+  { title: 'Riparazione', text: 'Ripariamo con ricambi di qualità, solo dopo il tuo ok.' },
+  { title: 'Ritiro', text: 'Ti avvisiamo appena è pronto, testato e sicuro.' },
+];

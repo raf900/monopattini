@@ -3,17 +3,18 @@ import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import { site, wa } from '../data/site.js';
 
-const nav = [['/compra', 'Compra'], ['/vendi', 'Vendi'], ['/sicurezza', 'Sicurezza']];
+const nav = [['/riparazioni', 'Riparazioni'], ['/compra', 'Compra'], ['/vendi', 'Vendi'], ['/sicurezza', 'Sicurezza']];
 const path = Astro.url.pathname;
 
 // Icone del menu mobile (tratti SVG, viewBox 24×24).
 const icons = {
   '/': '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  '/riparazioni': '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/>',
   '/compra': '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
   '/vendi': '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.5"/>',
   '/sicurezza': '<path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
 };
-const { title =`${site.name} — ${site.tagline}`, description = 'Monopattini elettrici usati in Ticino: controllati, testati e migliorati, e garantiti. Compra o vendi il tuo monopattino.' } = Astro.props;
+const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e vendita di mezzi elettrici in Ticino: monopattini, scooter e moto elettriche, hoverboard e monoruota. Compra o vendi il tuo usato.' } = Astro.props;
 ---
 <!doctype html>
 <html lang="it">
@@ -41,7 +42,7 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Monopattini el
             <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a>
           ))}
         </nav>
-        <a class="btn btn-sm nav-wa" href={wa('Ciao! Vorrei informazioni sui vostri monopattini.')}>WhatsApp</a>
+        <a class="btn btn-sm nav-wa" href={wa('Ciao! Vorrei informazioni.')}>WhatsApp</a>
         <button type="button" class="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="drawer" data-menu-open>
           <span></span><span></span><span></span>
         </button>
@@ -64,7 +65,7 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Monopattini el
           </a>
         ))}
       </nav>
-      <a class="btn drawer-wa" href={wa('Ciao! Vorrei informazioni sui vostri monopattini.')}>Scrivici su WhatsApp</a>
+      <a class="btn drawer-wa" href={wa('Ciao! Vorrei informazioni.')}>Scrivici su WhatsApp</a>
     </aside>
 
     <main>

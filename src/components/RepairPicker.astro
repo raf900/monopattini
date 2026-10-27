@@ -1,0 +1,123 @@
+---
+import { repairVehicles, wa } from '../data/site.js';
+
+// links: solo le card dei mezzi, che portano alla pagina Riparazioni con il mezzo già scelto (home)
+// altrimenti: scelta del mezzo → problemi → richiesta di preventivo su WhatsApp (pagina Riparazioni)
+const { links = false } = Astro.props;
+---
+<div class="rp" data-rp={links ? undefined : ''}>
+  <div class="rp-vehicles">
+    {repairVehicles.map((v) => links
+      ? <a class="card rp-vehicle" href={`/riparazioni?mezzo=${v.id}#ripara`}><svg viewBox="0 0 24 24" aria-hidden="true" set:html={v.icon} /><span>{v.label}</span></a>
+      : <button type="button" class="card rp-vehicle" aria-pressed="false" data-vehicle={v.id} data-nome={v.nome}><svg viewBox="0 0 24 24" aria-hidden="true" set:html={v.icon} /><span>{v.label}</span></button>
+    )}
+  </div>
+
+  {!links && (
+    <div class="card rp-form" data-form hidden>
+      {repairVehicles.map((v) => (
+        <fieldset class="rp-problems" data-problems={v.id} hidden>
+          <legend>Che problema ha il tuo mezzo?</legend>
+          <div class="model-chips">
+            {v.problems.map((p) => <button type="button" aria-pressed="false" data-problem={p}>{p}</button>)}
+          </div>
+        </fieldset>
+      ))}
+      <label class="rp-note">
+        <span>Marca e modello <small>(e, se vuoi, cosa succede)</small></span>
+        <textarea rows="3" data-note required placeholder="Es. Xiaomi 4 Pro, si spegne in salita"></textarea>
+        <small class="rp-error" data-error hidden>Scrivi marca e modello: ci servono per farti il preventivo.</small>
+      </label>
+      <a class="btn rp-send" href={wa('Ciao! Vorrei un preventivo per una riparazione.')} data-send target="_blank" rel="noopener">Richiedi preventivo su WhatsApp</a>
+      <p class="rp-hint">Si apre WhatsApp con il messaggio già scritto: devi solo inviarlo.</p>
+    </div>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rp]').forEach((rp) => {
+    const form = rp.querySelector<HTMLElement>('[data-form]')!;
+    const send = rp.querySelector<HTMLAnchorElement>('[data-send]')!;
+    const note = rp.querySelector<HTMLTextAreaElement>('[data-note]')!;
+    const error = rp.querySelector<HTMLElement>('[data-error]')!;
+    const base = new URL(send.href);
+    const vehicles = [...rp.querySelectorAll<HTMLButtonElement>('[data-vehicle]')];
+    let current = '';
+
+    // messaggio WhatsApp: mezzo + problemi scelti + dettagli
+    const update = () => {
+      const v = vehicles.find((b) => b.dataset.vehicle === current);
+      const box = rp.querySelector<HTMLElement>(`[data-problems="${current}"]`);
+      const picked = box ? [...box.querySelectorAll<HTMLButtonElement>('[aria-pressed="true"]')].map((b) => b.dataset.problem) : [];
+      let text = `Ciao! Vorrei un preventivo per riparare ${v ? v.dataset.nome : 'un mezzo elettrico'}.`;
+      if (picked.length) text += `\nProblemi: ${picked.join(', ')}.`;
+      if (note.value.trim()) text += `\nMarca e modello: ${note.value.trim()}`;
+      base.searchParams.set('text', text);
+      send.href = base.toString();
+    };
+
+    // scegliere un mezzo non fa scorrere la pagina: il modulo compare subito sotto le card
+    const pick = (id: string) => {
+      current = id;
+      vehicles.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.vehicle === id)));
+      rp.querySelectorAll<HTMLElement>('[data-problems]').forEach((f) => (f.hidden = f.dataset.problems !== id));
+      form.hidden = false;
+      update();
+    };
+
+    // il browser, mostrando il modulo, sposterebbe la pagina per tenere ferma la sezione sotto:
+    // si riporta invece la card toccata esattamente dov'era
+    vehicles.forEach((b) => b.addEventListener('click', () => {
+      const before = b.getBoundingClientRect().top;
+      pick(b.dataset.vehicle!);
+      const diff = b.getBoundingClientRect().top - before;
+      if (diff) scrollBy({ top: diff, behavior: 'instant' });
+    }));
+    rp.querySelectorAll<HTMLButtonElement>('[data-problem]').forEach((b) => b.addEventListener('click', () => {
+      b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+      update();
+    }));
+    note.addEventListener('input', () => { error.hidden = true; note.classList.remove('rp-missing'); update(); });
+    // marca e modello sono obbligatori: senza, WhatsApp non si apre e il campo viene evidenziato
+    send.addEventListener('click', (e) => {
+      if (note.value.trim()) return;
+      e.preventDefault();
+      error.hidden = false;
+      note.classList.add('rp-missing');
+      note.focus();
+    });
+
+    // mezzo già scelto dalla home (?mezzo=scooter)
+    const pre = new URLSearchParams(location.search).get('mezzo');
+    if (pre && vehicles.some((b) => b.dataset.vehicle === pre)) pick(pre);
+  });
+</script>
+
+<style>
+  .rp-vehicles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .rp-vehicle {
+    display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 12px;
+    font: inherit; font-weight: 700; font-family: var(--display); color: var(--text); text-decoration: none; text-align: center; cursor: pointer;
+  }
+  .rp-vehicle svg { width: 44px; height: 44px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .rp-vehicle[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+  .rp-form { margin-top: 18px; display: grid; gap: 18px; text-align: left; }
+  .rp-form:hover { transform: none; }
+  .rp-problems { border: 0; margin: 0; padding: 0; }
+  .rp-problems legend { font: 700 1.05rem var(--display); margin-bottom: 12px; padding: 0; }
+  .rp-note { display: grid; gap: 6px; font-weight: 600; }
+  .rp-note small { color: var(--muted); font-weight: 400; }
+  .rp-note textarea { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; resize: vertical; }
+  .rp-note textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .rp-note textarea.rp-missing { border-color: #e5484d; outline-color: #e5484d; }
+  .rp-error { color: #e5484d; font-weight: 600; }
+  .rp-send { justify-self: start; }
+  .rp-hint { color: var(--muted); font-size: .85rem; margin: -8px 0 0; }
+  @media (max-width: 900px) { .rp-vehicles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) {
+    .rp-vehicles { gap: 10px; }
+    .rp-vehicle { padding: 16px 8px; font-size: .9rem; }
+    .rp-vehicle svg { width: 36px; height: 36px; }
+    .rp-send { justify-self: stretch; text-align: center; }
+  }
+</style>

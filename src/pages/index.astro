@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 // Foto dell'hero (Unsplash, Hiboy: https://unsplash.com/photos/qwPdZr8Fa5g)
 import heroPhoto from '../assets/hero/scooter.jpg';
 import ScooterCards from '../components/ScooterCards.astro';
+import RepairPicker from '../components/RepairPicker.astro';
 import Steps from '../components/Steps.astro';
 import Contacts from '../components/Contacts.astro';
 import { wa } from '../data/site.js';
@@ -12,11 +13,12 @@ import { wa } from '../data/site.js';
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-text">
-        <p class="eyebrow">Monopattini elettrici usati</p>
-        <h1>Usati,<br /><span class="accent">ma meglio che nuovi.</span></h1>
-        <p class="lead">Monopattini elettrici di seconda mano riparati, migliorati e garantiti. Xiaomi, Ninebot e altre marche. Consulenza gratuita per capire le tue esigenze.</p>
+        <p class="eyebrow">Riparazione e vendita di mezzi elettrici in Ticino</p>
+        <h1>Se va a batteria,<br /><span class="accent">lo sistemiamo.</span></h1>
+        <p class="lead">Monopattini, scooter e moto elettriche, hoverboard e monoruota: li ripariamo, vendiamo usati riparati e garantiti e compriamo il tuo. Consulenza gratuita per capire le tue esigenze.</p>
         <div class="cta-row">
-          <a class="btn" href="/compra">Compra</a>
+          <a class="btn" href="/riparazioni">Ripara</a>
+          <a class="btn btn-ghost" href="/compra">Compra</a>
           <a class="btn btn-ghost" href="/vendi">Vendi</a>
         </div>
         <ul class="badges">
@@ -29,6 +31,15 @@ import { wa } from '../data/site.js';
         <Image src={heroPhoto} alt="Un monopattino elettrico parcheggiato al tramonto" widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px"
           loading="eager" fetchpriority="high" class="hero-photo" style="object-position:50% 55%" />
       </div>
+    </div>
+  </section>
+
+  <section id="ripara" class="section alt">
+    <div class="wrap">
+      <p class="eyebrow">Riparazioni</p>
+      <h2>Cosa ripariamo</h2>
+      <p class="sub">Scegli il tuo mezzo, dicci cosa non va e ti mandiamo un preventivo su WhatsApp.</p>
+      <RepairPicker links />
     </div>
   </section>
 

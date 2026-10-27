@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RepairPicker from '../components/RepairPicker.astro';
+import Steps from '../components/Steps.astro';
+import { repairSteps, site } from '../data/site.js';
+---
+<Layout
+  title="Riparazioni di mezzi elettrici in Ticino — Monopattini.ch"
+  description="Riparazione di monopattini, scooter e moto elettriche, hoverboard e monoruota in Ticino. Scegli il mezzo e il problema e chiedi un preventivo su WhatsApp."
+>
+  <section id="ripara" class="section page-top">
+    <div class="wrap">
+      <p class="eyebrow">Riparazioni</p>
+      <h1 class="page-title">{site.slogan}</h1>
+      <p class="sub">Monopattini, scooter e moto elettriche, hoverboard, monoruota e altri mezzi elettrici. Scegli il tuo mezzo, dicci cosa non va e ti mandiamo un preventivo.</p>
+      <RepairPicker />
+    </div>
+  </section>
+
+  <Steps items={repairSteps} title="Come funziona una riparazione" />
+</Layout>
