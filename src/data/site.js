@@ -1,5 +1,7 @@
 // Dati dell'attività — TODO: sostituire i valori segnaposto con quelli reali.
 export const wa = (text) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+// WhatsApp di una persona precisa ('+41 78 441 54 25' → wa.me/41784415425)
+export const waTo = (phone, text) => `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
 export const chf = (n) => (n == null ? 'Prezzo su richiesta' : `CHF ${n.toLocaleString('de-CH')}.–`);
 
 export const site = {
@@ -7,7 +9,13 @@ export const site = {
   tagline: 'Riparazione e vendita di mezzi elettrici in Ticino',
   slogan: 'Se va a batteria, lo sistemiamo.',
   phone: '+41 79 453 05 76',
-  whatsapp: '41794530576', // numero senza "+" e spazi, per il link wa.me
+  whatsapp: '41794530576', // numero senza "+" e spazi, per il link wa.me (numero principale dei pulsanti WhatsApp)
+  // persone di contatto (sezione Contatti), come sul volantino
+  people: [
+    { name: 'Alex', phone: '+41 78 441 54 25' },
+    { name: 'Rafael', phone: '+41 79 453 05 76' },
+  ],
+  area: 'Lugano e dintorni',
   email: 'info@monopattini.ch', // TODO: verificare che la casella esista
   instagram: 'monopattini.ch', // TODO: nome Instagram reale
   hours: [
@@ -280,20 +288,20 @@ export const tuttiAds = [
 export const repairVehicles = [
   { id: 'monopattino', label: 'Monopattino', nome: 'un monopattino elettrico', tuo: 'il tuo monopattino',
     icon: '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme / foratura', 'Luci', 'Display / elettronica', 'Acceleratore', 'Chiusura / piantone', 'Sospensioni', 'Non si accende', 'Rumori'] },
-  { id: 'scooter', label: 'Scooter elettrico', nome: 'uno scooter elettrico', tuo: 'il tuo scooter',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Luci', 'Display / elettronica', 'Acceleratore', 'Chiusura / piantone', 'Sospensioni', 'Non si accende', 'Rumori'] },
+  { id: 'scooter', label: 'Scooter', nome: 'uno scooter elettrico', tuo: 'il tuo scooter',
     icon: '<circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7.5l2-6H21M15 6h3l-.5 5.5M3 13.5h7l1.5 4"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme / foratura', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende', 'Rumori'] },
-  { id: 'moto', label: 'Moto elettrica', nome: 'una moto elettrica', tuo: 'la tua moto',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende', 'Rumori'] },
+  { id: 'moto', label: 'Moto', nome: 'una moto elettrica', tuo: 'la tua moto',
     icon: '<circle cx="5" cy="16" r="3"/><circle cx="19" cy="16" r="3"/><path d="M5 16 9 9h5l3 3h2M14 9l-2 7H8M16 6h2.5"/><path d="m11 5-1.5 2.5h2L10 10"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme / foratura', 'Catena / trasmissione', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende'] },
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Catena / trasmissione', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende'] },
   { id: 'hoverboard', label: 'Hoverboard', nome: 'un hoverboard', tuo: 'il tuo hoverboard',
     icon: '<rect x="2" y="9" width="20" height="6" rx="3"/><circle cx="4.5" cy="17" r="2"/><circle cx="19.5" cy="17" r="2"/><path d="M9 12h6"/>',
     problems: ['Batteria', 'Caricatore', 'Motore ruota', 'Sensori / equilibrio', 'Scheda elettronica', 'Gomme', 'Carrozzeria', 'Non si accende', 'Rumori'] },
   { id: 'monoruota', label: 'Monoruota', nome: 'una monoruota', tuo: 'la tua monoruota',
     icon: '<circle cx="12" cy="14" r="7"/><circle cx="12" cy="14" r="2"/><path d="M8 6.5 9.5 3h5L16 6.5"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Gomma / foratura', 'Firmware / app', 'Pedane', 'Non si accende', 'Rumori'] },
-  { id: 'altro', label: 'Altro mezzo elettrico', nome: 'un mezzo elettrico', tuo: 'il tuo mezzo',
+    problems: ['Batteria', 'Caricatore', 'Motore', 'Gomma e forature', 'Firmware / app', 'Pedane', 'Non si accende', 'Rumori'] },
+  { id: 'altro', label: 'Altri', nome: 'un mezzo elettrico', tuo: 'il tuo mezzo',
     icon: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
     problems: ['Batteria', 'Caricatore', 'Motore', 'Elettronica', 'Non si accende', 'Altro'] },
 ];
