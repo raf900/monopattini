@@ -171,7 +171,7 @@ a { color: var(--accent); }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
 .hero .badges { margin-top: 40px; }   /* spazio tra il testo e le tre spunte */
 .hero-text h1 { margin-bottom: 36px; }   /* spazio tra il titolo e il testo */
-.hero .lead-first { margin-bottom: 20px; }   /* spazio dopo la prima frase dell'hero */
+.hero .lead-gap { margin-bottom: 20px; }   /* spazio tra le frasi dell'hero */
 .m-br { display: none; }   /* a capo solo su telefono */
 .badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: .95rem; }
 
@@ -362,13 +362,14 @@ a { color: var(--accent); }
 .buy-checks li { display: flex; align-items: center; gap: 10px; font-weight: 600; }
 .buy-checks li::before { content: '✓'; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; background: var(--accent); color: #fff; font-size: .85rem; font-weight: 800; }
 @media (max-width: 600px) { .buy-checks { flex-direction: column; align-items: center; } }
-.services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.service { display: flex; gap: 16px; align-items: center; text-decoration: none; color: var(--text); }
-.service-ico { display: grid; place-items: center; flex-shrink: 0; width: 52px; height: 52px; border-radius: 14px; background: var(--accent); }
-.service-ico svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.service h3 { font-size: 1.3rem; margin: 2px 0 4px; }
-.service p { margin: 0; color: var(--muted); }
-@media (max-width: 900px) { .services { grid-template-columns: 1fr; } .service { text-align: left; } }
+/* riquadri compatti e centrati: larghezza scelta perché ogni testo vada su due righe */
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 310px)); justify-content: center; gap: 16px; }
+.service { display: flex; gap: 16px; align-items: center; padding: 18px 20px; text-decoration: none; color: var(--text); }
+.service-ico { display: grid; place-items: center; flex-shrink: 0; width: 50px; height: 50px; border-radius: 14px; background: var(--accent); }
+.service-ico svg { width: 27px; height: 27px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.service h3 { font-size: 1.22rem; margin: 0 0 2px; }
+.service p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.45; }
+@media (max-width: 900px) { .services { grid-template-columns: min(310px, 100%); } .service { text-align: left; } }
 .hours table { width: 100%; border-collapse: collapse; }
 .hours th, .hours td { text-align: left; padding: 10px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
 .hours td { color: var(--muted); text-align: right; }
@@ -448,7 +449,7 @@ a { color: var(--accent); }
   main, .footer { text-align: center; }
   .lead, .sub { margin-inline: auto; }
   .cta-row, .badges, .specs, .footer .wrap { justify-content: center; }
-  .hero-art { margin-inline: auto; }
+  .hero-art { margin-inline: auto; max-width: 340px; }   /* telefono: foto dell'hero un po' più piccola della larghezza piena */
   .contact-list li { flex-direction: column; align-items: center; gap: 2px; }
   .contact-list span { width: auto; }
   .buy-table th, .buy-table td { padding: 12px 10px; font-size: .88rem; }
