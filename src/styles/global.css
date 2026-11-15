@@ -170,7 +170,8 @@ a { color: var(--accent); }
 .hero-photo.hero-photo-full { aspect-ratio: 1; object-fit: cover; object-position: 50% 54%; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
 .hero .badges { margin-top: 28px; }
-.m-br { display: none; }   /* a capo solo su telefono */   /* spazio tra il testo e le tre spunte (senza pulsanti) */
+.m-br { display: none; }   /* a capo solo su telefono */
+.d-br { display: inline; }   /* a capo solo su desktop */   /* spazio tra il testo e le tre spunte (senza pulsanti) */
 .badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: .95rem; }
 
 /* Sections */
@@ -410,6 +411,7 @@ a { color: var(--accent); }
   .hero { padding: 48px 0 28px; }
   /* telefono: il pre-titolo dell'hero su una sola riga */
   .m-br { display: inline; }
+  .d-br { display: none; }
   .hero .eyebrow { font-size: min(.62rem, 2.55vw); letter-spacing: .05em; white-space: nowrap; }
   .section { padding: 64px 0; }
   .grid-3, .shop .grid-3 { grid-template-columns: 1fr 1fr; }
