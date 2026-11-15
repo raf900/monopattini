@@ -99,6 +99,8 @@ const { links = false } = Astro.props;
     display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 12px;
     font: inherit; font-weight: 700; font-family: var(--display); color: var(--text); text-decoration: none; text-align: center; cursor: pointer;
   }
+  /* l'ultima card, se resta da sola sulla riga, occupa tutta la larghezza */
+  .rp-vehicle:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
   .rp-vehicle svg { width: 44px; height: 44px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .rp-vehicle[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
   .rp-form { margin-top: 18px; display: grid; gap: 18px; text-align: left; }
@@ -113,7 +115,11 @@ const { links = false } = Astro.props;
   .rp-error { color: #e5484d; font-weight: 600; }
   .rp-send { justify-self: start; }
   .rp-hint { color: var(--muted); font-size: .85rem; margin: -8px 0 0; }
-  @media (max-width: 900px) { .rp-vehicles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) {
+    .rp-vehicles { grid-template-columns: repeat(2, 1fr); }
+    .rp-vehicle:last-child:nth-child(3n + 1) { grid-column: auto; }
+    .rp-vehicle:last-child:nth-child(2n + 1) { grid-column: 1 / -1; }
+  }
   @media (max-width: 600px) {
     .rp-vehicles { gap: 10px; }
     .rp-vehicle { padding: 16px 8px; font-size: .9rem; }
