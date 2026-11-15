@@ -166,8 +166,8 @@ a { color: var(--accent); }
   box-shadow: 0 28px 72px -30px rgb(26 111 224 / .45), 0 0 0 8px rgb(26 111 224 / .06);
 }
 .hero h1 { font-size: clamp(2rem, 4.8vw, 3.25rem); }
-/* foto dell'hero intera, nel formato originale (verticale) */
-.hero-photo.hero-photo-full { aspect-ratio: auto; height: auto; object-fit: contain; }
+/* foto dell'hero quadrata: taglia un po' di cielo sopra, tutto l'asfalto sotto e il fondo della gomma */
+.hero-photo.hero-photo-full { aspect-ratio: 1; object-fit: cover; object-position: 50% 54%; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
 .hero .badges { margin-top: 28px; }   /* spazio tra il testo e le tre spunte (senza pulsanti) */
 .badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: .95rem; }
