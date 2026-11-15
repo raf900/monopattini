@@ -169,8 +169,9 @@ a { color: var(--accent); }
 /* foto dell'hero quadrata (la foto è già quadrata: nessun ritaglio) */
 .hero-photo.hero-photo-full { aspect-ratio: 1; object-fit: cover; object-position: 50% 50%; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
-.hero .badges { margin-top: 28px; }
-.m-br { display: none; }   /* a capo solo su telefono */   /* spazio tra il testo e le tre spunte (senza pulsanti) */
+.hero .badges { margin-top: 40px; }   /* spazio tra il testo e le tre spunte */
+.hero-text h1 { margin-bottom: 36px; }   /* spazio tra il titolo e il testo */
+.m-br { display: none; }   /* a capo solo su telefono */
 .badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: .95rem; }
 
 /* Sections */
