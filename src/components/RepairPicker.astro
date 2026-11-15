@@ -1,9 +1,26 @@
 ---
-import { repairVehicles, wa } from '../data/site.js';
+import { repairVehicles, repairZones, repairPoints, wa } from '../data/site.js';
 
 // links: solo le card dei mezzi, che portano alla pagina Riparazioni con il mezzo già scelto (home)
 // altrimenti: scelta del mezzo → problemi → richiesta di preventivo su WhatsApp (pagina Riparazioni)
 const { links = false } = Astro.props;
+
+// Schema (come sulla home di scooterlabticino.ch): viewBox 640×520, icona del mezzo ingrandita al centro,
+// numeri in due colonne con linee tratteggiate verso la parte. Ogni mezzo ha solo le sue parti, numerate da 1.
+const W = 640, H = 520, S = 15.5, X0 = (W - 24 * S) / 2, Y0 = 50;
+const at = ([x, y]) => [X0 + x * S, Y0 + y * S];
+const col = { sx: 64, dx: 576 };
+const row = { manubrio: 110, anteriore: 410, ruota: 410, centrale: 110, posteriore: 410 };
+const davanti = ['manubrio', 'anteriore', 'ruota'];
+const figure = (id) => {
+  const { fronte, punti } = repairPoints[id];
+  const altro = fronte === 'sx' ? 'dx' : 'sx';
+  return repairZones.filter((z) => punti[z.id]).map((z, i) => {
+    const mx = col[davanti.includes(z.id) ? fronte : altro], my = row[z.id];
+    const [ax, ay] = at(punti[z.id]);
+    return { ...z, n: i + 1, mx, my, lead: `M${mx + (mx < W / 2 ? 22 : -22)} ${my} ${ax} ${ay}` };
+  });
+};
 ---
 <div class="rp" data-rp={links ? undefined : ''}>
   <div class="rp-vehicles">
@@ -15,14 +32,39 @@ const { links = false } = Astro.props;
 
   {!links && (
     <div class="card rp-form" data-form hidden>
-      {repairVehicles.map((v) => (
-        <fieldset class="rp-problems" data-problems={v.id} hidden>
-          <legend>Che problema ha il tuo mezzo?</legend>
-          <div class="model-chips">
-            {v.problems.map((p) => <button type="button" aria-pressed="false" data-problem={p}>{p}</button>)}
+      <!-- Schema del mezzo scelto: numeri 1–4 sulle parti, descrizione a lato (su telefono: numeri sopra la descrizione) -->
+      {repairVehicles.map((v) => {
+        const zs = figure(v.id);
+        return (
+          <div class="dg" data-fig={v.id} hidden>
+            <div class="dg-figure">
+              <svg class="dg-svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+                <ellipse cx="320" cy={Y0 + 20.2 * S} rx="230" ry="8" class="dg-floor" />
+                {zs.map((m, i) => <path d={m.lead} class:list={['dg-lead', i === 0 && 'on']} data-lead={m.id} />)}
+                <g transform={`translate(${X0} ${Y0}) scale(${S})`}><g class="dg-icon" set:html={v.icon} /></g>
+              </svg>
+              {zs.map((m, i) => (
+                <button type="button" class="dg-marker" data-pick={m.id} aria-pressed={String(i === 0)} aria-label={m.title}
+                  style={`left:${(m.mx / W) * 100}%;top:${(m.my / H) * 100}%`}>{m.n}</button>
+              ))}
+            </div>
+            <div class="dg-panel card">
+              <div class="dg-tabs">
+                {zs.map((m, i) => <button type="button" class="dg-tab" data-pick={m.id} aria-pressed={String(i === 0)} aria-label={m.title}>{m.n}</button>)}
+              </div>
+              <div class="dg-stack">
+                {zs.map((m, i) => (
+                  <div class="dg-info" data-panel={m.id} data-title={m.title} aria-hidden={String(i !== 0)}>
+                    <h3><span class="dg-num">{m.n}</span>{m.title}</h3>
+                    <p>{m.text}</p>
+                    <ul class="dg-list">{m.parts.map((p) => <li>{p}</li>)}</ul>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </fieldset>
-      ))}
+        );
+      })}
       <label class="rp-note">
         <span>Marca e modello <small>(e, se vuoi, cosa succede)</small></span>
         <textarea rows="3" data-note required placeholder="Es. Xiaomi 4 Pro, si spegne in salita"></textarea>
@@ -43,14 +85,14 @@ const { links = false } = Astro.props;
     const base = new URL(send.href);
     const vehicles = [...rp.querySelectorAll<HTMLButtonElement>('[data-vehicle]')];
     let current = '';
+    let zone = '';   // parte scelta toccando un numero (finché non si tocca, non va nel messaggio)
 
-    // messaggio WhatsApp: mezzo + problemi scelti + dettagli
+    // messaggio WhatsApp: mezzo + parte scelta nello schema + marca e modello
     const update = () => {
       const v = vehicles.find((b) => b.dataset.vehicle === current);
-      const box = rp.querySelector<HTMLElement>(`[data-problems="${current}"]`);
-      const picked = box ? [...box.querySelectorAll<HTMLButtonElement>('[aria-pressed="true"]')].map((b) => b.dataset.problem) : [];
       let text = `Ciao! Vorrei un preventivo per riparare ${v ? v.dataset.nome : 'un mezzo elettrico'}.`;
-      if (picked.length) text += `\nProblemi: ${picked.join(', ')}.`;
+      const z = zone && rp.querySelector<HTMLElement>(`[data-fig="${current}"] [data-panel="${zone}"]`);
+      if (z) text += `\nParte: ${z.dataset.title}.`;
       if (note.value.trim()) text += `\nMarca e modello: ${note.value.trim()}`;
       base.searchParams.set('text', text);
       send.href = base.toString();
@@ -60,7 +102,8 @@ const { links = false } = Astro.props;
     const pick = (id: string) => {
       current = id;
       vehicles.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.vehicle === id)));
-      rp.querySelectorAll<HTMLElement>('[data-problems]').forEach((f) => (f.hidden = f.dataset.problems !== id));
+      rp.querySelectorAll<HTMLElement>('[data-fig]').forEach((f) => (f.hidden = f.dataset.fig !== id));
+      zone = '';   // nuovo mezzo: nessuna parte scelta finché non si tocca un numero
       form.hidden = false;
       update();
     };
@@ -73,10 +116,15 @@ const { links = false } = Astro.props;
       const diff = b.getBoundingClientRect().top - before;
       if (diff) scrollBy({ top: diff, behavior: 'instant' });
     }));
-    rp.querySelectorAll<HTMLButtonElement>('[data-problem]').forEach((b) => b.addEventListener('click', () => {
-      b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+    // schema: si cambia parte toccando un numero (sull'icona o, su telefono, sopra la descrizione)
+    const selectZone = (box: HTMLElement, id: string) => {
+      zone = id;
+      box.querySelectorAll<HTMLElement>('[data-pick]').forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.pick === id)));
+      box.querySelectorAll<SVGPathElement>('[data-lead]').forEach((el) => el.classList.toggle('on', el.dataset.lead === id));
+      box.querySelectorAll<HTMLElement>('[data-panel]').forEach((el) => el.setAttribute('aria-hidden', String(el.dataset.panel !== id)));
       update();
-    }));
+    };
+    rp.querySelectorAll<HTMLButtonElement>('[data-pick]').forEach((b) => b.addEventListener('click', () => selectZone(b.closest<HTMLElement>('[data-fig]')!, b.dataset.pick!)));
     note.addEventListener('input', () => { error.hidden = true; note.classList.remove('rp-missing'); update(); });
     // marca e modello sono obbligatori: senza, WhatsApp non si apre e il campo viene evidenziato
     send.addEventListener('click', (e) => {
@@ -94,19 +142,57 @@ const { links = false } = Astro.props;
 </script>
 
 <style>
-  .rp-vehicles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  /* desktop: tutti i mezzi su una riga, pulsanti rettangolari con icona piccola */
+  .rp-vehicles { --rp-size: 130px; display: grid; grid-template-columns: repeat(auto-fit, var(--rp-size)); grid-auto-flow: column; justify-content: center; gap: 22px; }
   .rp-vehicle {
-    display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px 6px; font-size: .88rem;
+    aspect-ratio: 1;   /* quadrati */
     font: inherit; font-weight: 700; font-family: var(--display); color: var(--text); text-decoration: none; text-align: center; cursor: pointer;
   }
-  /* l'ultima card, se resta da sola sulla riga, occupa tutta la larghezza */
-  .rp-vehicle:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
-  .rp-vehicle svg { width: 44px; height: 44px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .rp-vehicle svg { width: 42px; height: 42px; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .rp-vehicle[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
   .rp-form { margin-top: 18px; display: grid; gap: 18px; text-align: left; }
   .rp-form:hover { transform: none; }
-  .rp-problems { border: 0; margin: 0; padding: 0; }
-  .rp-problems legend { font: 700 1.05rem var(--display); margin-bottom: 12px; padding: 0; }
+  .rp-form[hidden] { display: none; }   /* il modulo compare solo dopo aver scelto un mezzo */
+  /* Schema (copiato dalla home di scooterlabticino.ch, con 4 numeri) */
+  .dg { display: grid; grid-template-columns: 1.55fr 1fr; gap: 32px; align-items: center; }
+  .dg-figure { position: relative; }
+  .dg[hidden] { display: none; }
+  .dg-svg { display: block; width: 100%; height: auto; }
+  .dg-floor { fill: rgb(47 143 255 / .12); }
+  .dg-icon { fill: none; stroke: var(--accent); stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgb(47 143 255 / .35)); }
+  .dg-icon :global(*) { vector-effect: non-scaling-stroke; stroke-width: 7px; }
+  .dg-lead { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 3 5; stroke-linecap: round; transition: stroke .2s; }
+  .dg-lead.on { stroke: var(--accent); stroke-width: 2; }
+  .dg-marker {
+    position: absolute; transform: translate(-50%, -50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 2px solid var(--accent); background: var(--bg); color: var(--text);
+    font: 800 1.15rem var(--display); cursor: pointer;
+    transition: background .2s, box-shadow .2s, transform .2s;
+  }
+  /* Area di tocco invisibile più grande del cerchio. */
+  .dg-marker::before { content: ''; position: absolute; inset: -10px; border-radius: 50%; }
+  .dg-marker:hover, .dg-marker[aria-pressed='true'] {
+    background: var(--accent); color: #fff; box-shadow: 0 0 0 6px rgb(47 143 255 / .2), 0 0 24px var(--accent);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  /* Riga di numeri sopra la descrizione: solo su telefono/tablet */
+  .dg-tabs { display: none; }
+  .dg-tab {
+    position: relative; width: 40px; height: 40px; border-radius: 50%;
+    border: 2px solid var(--accent); background: var(--bg); color: var(--text);
+    font: 800 1rem var(--display); cursor: pointer; transition: background .2s, box-shadow .2s;
+  }
+  .dg-tab[aria-pressed='true'] { background: var(--accent); color: #fff; box-shadow: 0 0 0 4px rgb(47 143 255 / .2), 0 0 16px var(--accent); }
+  .dg-panel:hover { transform: none; }
+  /* Tutti i pannelli nella stessa cella: il box prende l'altezza del più lungo e non cambia dimensione. */
+  .dg-stack { display: grid; }
+  .dg-info { grid-area: 1 / 1; display: flex; flex-direction: column; transition: opacity .2s; }
+  .dg-info[aria-hidden='true'] { visibility: hidden; opacity: 0; }
+  .dg-info h3 { display: flex; align-items: center; gap: 12px; font-size: 1.35rem; }
+  .dg-num { display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 1rem; box-shadow: 0 0 20px -4px var(--accent); }
+  .dg-list { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; color: var(--text); }
   .rp-note { display: grid; gap: 6px; font-weight: 600; }
   .rp-note small { color: var(--muted); font-weight: 400; }
   .rp-note textarea { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; resize: vertical; }
@@ -115,15 +201,27 @@ const { links = false } = Astro.props;
   .rp-error { color: #e5484d; font-weight: 600; }
   .rp-send { justify-self: start; }
   .rp-hint { color: var(--muted); font-size: .85rem; margin: -8px 0 0; }
+  /* schermi medi: i quadrati si restringono per restare su una riga */
+  @media (max-width: 1080px) { .rp-vehicles { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
   @media (max-width: 900px) {
-    .rp-vehicles { grid-template-columns: repeat(2, 1fr); }
-    .rp-vehicle:last-child:nth-child(3n + 1) { grid-column: auto; }
-    .rp-vehicle:last-child:nth-child(2n + 1) { grid-column: 1 / -1; }
+    .dg { grid-template-columns: 1fr; }
+    /* su telefono/tablet i numeri stanno solo sopra la descrizione */
+    .dg-marker, .dg-lead { display: none; }
+    .dg-tabs { display: flex; justify-content: space-evenly; gap: 6px; margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .rp-vehicles { grid-template-columns: repeat(2, var(--rp-size)); grid-auto-flow: row; }
+    /* l'ultima card, se resta da sola sulla riga, va al centro (stessa misura delle altre) */
+    .rp-vehicle:last-child:nth-child(2n + 1) { grid-column: 1 / -1; justify-self: center; width: var(--rp-size); }
   }
   @media (max-width: 600px) {
-    .rp-vehicles { gap: 10px; }
-    .rp-vehicle { padding: 16px 8px; font-size: .9rem; }
+    /* telefono: due colonne, pulsanti più piccoli e più lontani dai bordi */
+    .rp-vehicles { --rp-size: 109px; gap: 8px; grid-template-columns: repeat(3, var(--rp-size)); }   /* telefono: 3 colonne */
+    .rp-vehicle { padding: 8px 4px; gap: 6px; font-size: .78rem; }
     .rp-vehicle svg { width: 36px; height: 36px; }
+    .rp-vehicle:last-child:nth-child(2n + 1) { grid-column: auto; width: auto; }
+    .rp-vehicle:last-child:nth-child(3n + 1) { grid-column: 1 / -1; justify-self: center; width: var(--rp-size); }
     .rp-send { justify-self: stretch; text-align: center; }
+    .dg-info { text-align: center; }
+    .dg-info h3 { justify-content: center; }
+    .dg-list { list-style: none; padding: 0; }
   }
 </style>

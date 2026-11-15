@@ -172,6 +172,7 @@ a { color: var(--accent); }
 .hero .badges { margin-top: 40px; }   /* spazio tra il testo e le tre spunte */
 .hero-text h1 { margin-bottom: 36px; }   /* spazio tra il titolo e il testo */
 .hero .lead-gap { margin-bottom: 20px; }   /* spazio tra le frasi dell'hero */
+.hero .lead-join { margin-bottom: 0; }   /* desktop: seconda e terza frase senza spazio tra loro */
 .m-br { display: none; }   /* a capo solo su telefono */
 .badges { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: .95rem; }
 
@@ -385,6 +386,7 @@ a { color: var(--accent); }
   .filters-toggle { display: inline-block; }
   .nav-theme { display: none; }   /* su telefono e tablet il tema si cambia dal menu laterale */
   .filters-apply { display: block; }
+  .hero .lead-join { margin-bottom: 20px; }   /* telefono e tablet: lo spazio resta */
   /* tablet e telefono (2 colonne): la card "Vedi tutti", da sola sull'ultima riga, al centro */
   .grid-3 .teaser-card { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); }
   /* telefono: Filtri, Confronta e ordinamento su una riga; il numero è nel pulsante dei filtri */

@@ -287,27 +287,46 @@ export const tuttiAds = [
 // Il visitatore sceglie il mezzo e i problemi, poi manda la richiesta di preventivo su WhatsApp.
 export const repairVehicles = [
   { id: 'monopattino', label: 'Monopattino', nome: 'un monopattino elettrico', tuo: 'il tuo monopattino',
-    icon: '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Luci', 'Display / elettronica', 'Acceleratore', 'Chiusura / piantone', 'Sospensioni', 'Non si accende', 'Rumori'] },
+    icon: '<circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 18h9M6 15.6 9 4M6.5 4h5"/>' },
   { id: 'scooter', label: 'Scooter', nome: 'uno scooter elettrico', tuo: 'il tuo scooter',
-    icon: '<circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7.5l2-6H21M15 6h3l-.5 5.5M3 13.5h7l1.5 4"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende', 'Rumori'] },
+    icon: '<circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M8 17.5h7.5l2-6H21M15 6h3l-.5 5.5M3 13.5h7l1.5 4"/>' },
   { id: 'moto', label: 'Moto', nome: 'una moto elettrica', tuo: 'la tua moto',
-    icon: '<circle cx="5" cy="16" r="3"/><circle cx="19" cy="16" r="3"/><path d="M5 16 9 9h5l3 3h2M14 9l-2 7H8M16 6h2.5"/><path d="m11 5-1.5 2.5h2L10 10"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Catena / trasmissione', 'Luci e frecce', 'Centralina', 'Display', 'Sospensioni', 'Non si accende'] },
+    icon: '<circle cx="5" cy="16" r="3"/><circle cx="19" cy="16" r="3"/><path d="M5 16 9 9h5l3 3h2M14 9l-2 7H8M16 6h2.5"/><path d="m11 5-1.5 2.5h2L10 10"/>' },
   { id: 'hoverboard', label: 'Hoverboard', nome: 'un hoverboard', tuo: 'il tuo hoverboard',
-    icon: '<rect x="2" y="9" width="20" height="6" rx="3"/><circle cx="4.5" cy="17" r="2"/><circle cx="19.5" cy="17" r="2"/><path d="M9 12h6"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore ruota', 'Sensori / equilibrio', 'Scheda elettronica', 'Gomme', 'Carrozzeria', 'Non si accende', 'Rumori'] },
+    icon: '<rect x="2" y="9" width="20" height="6" rx="3"/><circle cx="4.5" cy="17" r="2"/><circle cx="19.5" cy="17" r="2"/><path d="M9 12h6"/>' },
   { id: 'monoruota', label: 'Monoruota', nome: 'una monoruota', tuo: 'la tua monoruota',
-    icon: '<circle cx="12" cy="14" r="7"/><circle cx="12" cy="14" r="2"/><path d="M8 6.5 9.5 3h5L16 6.5"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Gomma e forature', 'Firmware / app', 'Pedane', 'Non si accende', 'Rumori'] },
+    icon: '<circle cx="12" cy="14" r="7"/><circle cx="12" cy="14" r="2"/><path d="M8 6.5 9.5 3h5L16 6.5"/>' },
   { id: 'ebike', label: 'E-bike', nome: 'una e-bike', tuo: 'la tua e-bike',
-    icon: '<circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5 9 9h6l3.5 7.5M9 9l3 7.5h1M8 6h3"/><path d="m16 3-1.5 2.5h2L15 8"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Freni', 'Gomme e forature', 'Display', 'Sensori / pedalata assistita', 'Cambio / trasmissione', 'Luci', 'Non si accende', 'Rumori'] },
+    icon: '<circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5 9 9h6l3.5 7.5M9 9l3 7.5h1M8 6h3"/><path d="m16 3-1.5 2.5h2L15 8"/>' },
   { id: 'altro', label: 'Altri', nome: 'un mezzo elettrico', tuo: 'il tuo mezzo',
-    icon: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
-    problems: ['Batteria', 'Caricatore', 'Motore', 'Elettronica', 'Non si accende', 'Altro'] },
+    icon: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>' },
 ];
+
+// Schema delle riparazioni: le parti del mezzo, numerate sull'icona del mezzo scelto.
+// L'ordine qui sotto dà la numerazione; ogni mezzo usa solo le parti che ha (vedi repairPoints).
+export const repairZones = [
+  { id: 'manubrio', title: 'Manubrio', text: 'Comandi, freni, display e luci.',
+    parts: ['Leve dei freni', 'Acceleratore', 'Display', 'Luci e frecce', 'Manopole', 'Cablaggi'] },
+  { id: 'anteriore', title: 'Ruota anteriore', text: 'Gomma, freno e, se c’è, il motore davanti.',
+    parts: ['Gomma e camera d’aria', 'Forature', 'Freno (disco o tamburo)', 'Motore anteriore', 'Sospensione', 'Cuscinetti', 'Parafango'] },
+  { id: 'ruota', title: 'Ruota', text: 'Gomma e motore nella ruota.',
+    parts: ['Gomma e camera d’aria', 'Forature', 'Motore', 'Cuscinetti', 'Parafango'] },
+  { id: 'centrale', title: 'Corpo centrale', text: 'Batteria, elettronica e telaio.',
+    parts: ['Batteria', 'Centralina / controller', 'Caricatore e porta di ricarica', 'Telaio e chiusura', 'Pedana o sella', 'Cablaggi interni'] },
+  { id: 'posteriore', title: 'Ruota posteriore', text: 'Gomma, freno e motore dietro.',
+    parts: ['Gomma e camera d’aria', 'Forature', 'Freno (disco o tamburo)', 'Motore posteriore', 'Sospensione', 'Luce posteriore', 'Parafango'] },
+];
+// Per ogni mezzo: le sue parti e dove punta il numero sull'icona (coordinate 0–24 dell'icona),
+// e da che parte è il davanti ('sx' o 'dx'): manubrio e ruota davanti su quel lato, corpo e ruota dietro sull'altro.
+export const repairPoints = {
+  monopattino: { fronte: 'sx', punti: { manubrio: [9.5, 4], anteriore: [5, 18], centrale: [12, 18], posteriore: [19, 18] } },
+  scooter: { fronte: 'dx', punti: { manubrio: [16.5, 6], anteriore: [18.5, 17.5], centrale: [10, 15], posteriore: [5.5, 17.5] } },
+  moto: { fronte: 'dx', punti: { manubrio: [17, 6], anteriore: [19, 16], centrale: [11, 10], posteriore: [5, 16] } },
+  hoverboard: { fronte: 'sx', punti: { anteriore: [4.5, 17], centrale: [12, 12], posteriore: [19.5, 17] } },
+  monoruota: { fronte: 'sx', punti: { ruota: [7.5, 18.5], centrale: [12, 4] } },
+  ebike: { fronte: 'sx', punti: { manubrio: [9.5, 6], anteriore: [5.5, 16.5], centrale: [12, 12], posteriore: [18.5, 16.5] } },
+  altro: { fronte: 'sx', punti: { manubrio: [9, 6], anteriore: [6, 17], centrale: [13, 11], posteriore: [17, 17] } },
+};
 
 // Come funziona una riparazione (pagina Riparazioni)
 export const repairSteps = [
