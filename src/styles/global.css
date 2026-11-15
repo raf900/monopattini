@@ -17,6 +17,23 @@
   color-scheme: light;
 }
 
+/* Tema scuro (interruttore ☀/☾ nell'header, come su scooterlabticino.ch; la scelta resta salvata nel browser) */
+:root[data-theme='dark'] {
+  --bg: #0a0f1a;
+  --bg-alt: #0f1624;
+  --card: #141c2c;
+  --line: #22304a;
+  --text: #eef3fb;
+  --muted: #93a1b8;
+  --accent: #2f8fff;
+  --accent-soft: rgb(47 143 255 / .14);
+  --nav-bg: rgb(10 15 26 / .85);
+  --grid: rgb(34 48 74 / .4);
+  --frame: #3a4c6c;
+  color-scheme: dark;
+}
+[data-theme='dark'] .logo-ti-b { color: #3b8cff; }   /* la I blu resta leggibile su fondo scuro */
+
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
 body {
@@ -117,6 +134,9 @@ a { color: var(--accent); }
 }
 .drawer-nav a[aria-current='page'] { color: var(--accent); }
 .drawer-wa { margin-top: 28px; text-align: center; }
+.drawer-theme { padding: 22px 4px; border-bottom: 1px solid var(--line); }
+/* su telefono l'interruttore è più grande (scala tutto, animazione compresa) */
+.drawer-theme .tt { transform: scale(1.35); transform-origin: left center; }
 
 /* Hero */
 .hero {
@@ -357,6 +377,7 @@ a { color: var(--accent); }
   .filters { position: static; display: none; }
   .filters.open { display: block; }
   .filters-toggle { display: inline-block; }
+  .nav-theme { display: none; }   /* su telefono e tablet il tema si cambia dal menu laterale */
   .filters-apply { display: block; }
   /* tablet e telefono (2 colonne): la card "Vedi tutti", da sola sull'ultima riga, al centro */
   .grid-3 .teaser-card { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); }

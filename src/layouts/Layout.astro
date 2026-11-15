@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import { site, wa } from '../data/site.js';
 
 const nav = [['/riparazioni', 'Riparazioni'], ['/compra', 'Compra'], ['/vendi', 'Vendi'], ['/sicurezza', 'Sicurezza']];
@@ -32,6 +33,10 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <!-- Applica il tema salvato prima del rendering (chiaro di default), per evitare il lampo del tema sbagliato. -->
+    <script is:inline>
+      try { document.documentElement.dataset.theme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'; } catch (e) { document.documentElement.dataset.theme = 'light'; }
+    </script>
   </head>
   <body>
     <header class="nav">
@@ -42,6 +47,7 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e 
             <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}</a>
           ))}
         </nav>
+        <ThemeToggle class="nav-theme" />
         <a class="btn btn-sm nav-wa" href={wa('Ciao! Vorrei informazioni.')}>WhatsApp</a>
         <button type="button" class="menu-btn" aria-label="Apri il menu" aria-expanded="false" aria-controls="drawer" data-menu-open>
           <span></span><span></span><span></span>
@@ -65,6 +71,7 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e 
           </a>
         ))}
       </nav>
+      <div class="drawer-theme"><ThemeToggle /></div>
       <a class="btn drawer-wa" href={wa('Ciao! Vorrei informazioni.')}>Scrivici su WhatsApp</a>
     </aside>
 
@@ -80,6 +87,25 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e 
     </footer>
 
     <script>
+      // Tema chiaro/scuro
+      // (pulsante nell'header su desktop, riga nel menu laterale su telefono)
+      const themeBtns = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+      const syncThemeBtns = () => {
+        const light = document.documentElement.dataset.theme !== 'dark';
+        themeBtns.forEach((b) => {
+          b.setAttribute('aria-pressed', String(light));
+          b.setAttribute('aria-label', light ? 'Tema scuro' : 'Tema chiaro');
+        });
+      };
+      themeBtns.forEach((b) => b.addEventListener('click', () => {
+        const light = document.documentElement.dataset.theme === 'dark';
+        document.documentElement.dataset.theme = light ? 'light' : 'dark';
+        try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (e) {}
+        syncThemeBtns();
+        document.dispatchEvent(new CustomEvent('themechange', { detail: { light } }));
+      }));
+      syncThemeBtns();
+
       const root = document.documentElement;
       const drawer = document.getElementById('drawer')!;
       const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]')!;
