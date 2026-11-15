@@ -384,6 +384,8 @@ a { color: var(--accent); }
   .logo-mark { height: 28px; }
   .logo-word, .logo .logo-mark { font-size: 1.05rem; }
   .hero { padding: 48px 0 28px; }
+  /* telefono: il pre-titolo dell'hero su una sola riga */
+  .hero .eyebrow { font-size: min(.62rem, 2.55vw); letter-spacing: .05em; white-space: nowrap; }
   .section { padding: 64px 0; }
   .grid-3, .shop .grid-3 { grid-template-columns: 1fr 1fr; }
   /* telefono: card un po' più strette e foto più bassa */
