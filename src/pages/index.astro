@@ -33,8 +33,14 @@ import { wa } from '../data/site.js';
         </ul>
       </div>
       <div class="hero-art">
-        <Image src={heroPhoto} alt="Monopattino elettrico in città. La tua mobilità elettrica, senza pensieri." widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px"
-          loading="eager" fetchpriority="high" class="hero-photo hero-photo-full" />
+        <figure class="hero-figure">
+          <Image src={heroPhoto} alt="La ruota anteriore di un monopattino elettrico in città" widths={[480, 960]} sizes="(max-width: 900px) 100vw, 480px"
+            loading="eager" fetchpriority="high" class="hero-photo hero-photo-full" />
+          <!-- scritta a mano sopra la foto (testo vero, non nell'immagine) -->
+          <figcaption class="hero-script">La tua mobilità<br />elettrica, senza pensieri.
+            <svg viewBox="0 0 200 12" aria-hidden="true"><path d="M3 9 C 60 3, 140 2, 197 5" /></svg>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
