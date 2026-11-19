@@ -1,7 +1,5 @@
 // Dati dell'attività — TODO: sostituire i valori segnaposto con quelli reali.
 export const wa = (text) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
-// WhatsApp di una persona precisa ('+41 78 441 54 25' → wa.me/41784415425)
-export const waTo = (phone, text) => `https://wa.me/${phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
 export const chf = (n) => (n == null ? 'Prezzo su richiesta' : `CHF ${n.toLocaleString('de-CH')}.–`);
 
 export const site = {
@@ -9,12 +7,7 @@ export const site = {
   tagline: 'Riparazione e vendita di mezzi elettrici in Ticino',
   slogan: 'Se va a batteria, lo sistemiamo.',
   phone: '+41 79 453 05 76',
-  whatsapp: '41794530576', // numero senza "+" e spazi, per il link wa.me (numero principale dei pulsanti WhatsApp)
-  // persone di contatto (sezione Contatti), come sul volantino
-  people: [
-    { name: 'Alex', phone: '+41 78 441 54 25' },
-    { name: 'Rafael', phone: '+41 79 453 05 76' },
-  ],
+  whatsapp: '41794530576', // numero dell'azienda senza "+" e spazi, per il link wa.me
   area: 'Lugano e dintorni',
   email: 'info@monopattini.ch', // TODO: verificare che la casella esista
   instagram: 'monopattini.ch', // TODO: nome Instagram reale
