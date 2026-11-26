@@ -93,8 +93,15 @@ a { color: var(--accent); }
 .nav nav a:hover { color: var(--text); }
 .nav nav a[aria-current='page'] { color: var(--accent); }
 /* etichetta "Prossimamente" nel menu (pagine non ancora pronte) */
-.nav-soon { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font: 600 .62rem/1.5 Inter, system-ui, sans-serif; letter-spacing: .02em; vertical-align: 2px; }
-.drawer-nav .nav-soon { font-size: .7rem; vertical-align: 3px; }
+/* "Prossimamente" sotto il nome della voce */
+.nav-label { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.2; }
+.drawer-nav .nav-label { align-items: flex-start; }
+/* desktop: l'etichetta pende sotto la parola, così "Sicurezza" resta allineata alle altre voci */
+.nav nav .nav-label { position: relative; }
+.nav nav .nav-soon { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.nav nav { align-items: center; }
+.nav-soon { display: inline-block; margin: 2px 0 0; padding: 1px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font: 600 .62rem/1.5 Inter, system-ui, sans-serif; letter-spacing: .02em; }
+.drawer-nav .nav-soon { font-size: .7rem; margin-top: 4px; }
 .soon { min-height: 50vh; }
 
 /* Marchio (ScooterMark): monopattino blu con scie */

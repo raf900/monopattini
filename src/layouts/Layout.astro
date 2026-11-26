@@ -46,7 +46,7 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e 
         <Logo />
         <nav>
           {nav.map(([href, label]) => (
-            <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}>{label}{soon.includes(href) && <span class="nav-soon">Prossimamente</span>}</a>
+            <a href={href} aria-current={path.startsWith(href) ? 'page' : undefined}><span class="nav-label">{label}{soon.includes(href) && <span class="nav-soon">Prossimamente</span>}</span></a>
           ))}
         </nav>
         <ThemeToggle class="nav-theme" />
@@ -69,7 +69,7 @@ const { title =`${site.name} — ${site.tagline}`, description = 'Riparazione e 
       <nav class="drawer-nav">
         {[['/', 'Home'], ...nav].map(([href, label]) => (
           <a href={href} aria-current={(href === '/' ? path === '/' : path.startsWith(href)) ? 'page' : undefined}>
-            <svg class="drawer-ico" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[href]} />{label}{soon.includes(href) && <span class="nav-soon">Prossimamente</span>}
+            <svg class="drawer-ico" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[href]} /><span class="nav-label">{label}{soon.includes(href) && <span class="nav-soon">Prossimamente</span>}</span>
           </a>
         ))}
       </nav>
