@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { rentals, wa } from '../data/site.js';
+import { photo } from '../data/photos.js';
+---
+<Layout
+  title="Noleggia un monopattino elettrico — Monopattini.ch"
+  description="Noleggia un monopattino elettrico in Ticino: Xiaomi Mi 4 Pro e Xiaomi Mi 5, controllati e pronti a partire. Prenota su WhatsApp."
+>
+  <section class="section page-top">
+    <div class="wrap">
+      <p class="eyebrow">Noleggio</p>
+      <h1 class="page-title">Noleggia un monopattino</h1>
+      <p class="sub">Monopattini controllati e pronti a partire. Scrivici su WhatsApp per disponibilità e prezzi.</p>
+
+      <div class="rent-list">
+        {rentals.map((r) => (
+          <article class="rent">
+            <!-- foto in un riquadro rotondo -->
+            <div class="rent-photo">
+              <Image src={photo(r.photo)} alt={r.model} widths={[240, 480]} sizes="240px" />
+            </div>
+            <h2>{r.model}</h2>
+            <p class="rent-desc">{r.descrizione}</p>
+            <ul class="specs">{r.dati.map(([k, v]) => <li><small>{k}</small> {v}</li>)}</ul>
+            <p class="rent-price">{r.prezzo ?? 'Prezzo su richiesta'}</p>
+            <a class="btn" href={wa(`Ciao! Vorrei noleggiare lo ${r.model}. È disponibile?`)} target="_blank" rel="noopener">Prenota su WhatsApp</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .rent-list { display: grid; grid-template-columns: repeat(2, minmax(0, 340px)); justify-content: center; gap: 48px; margin-top: 1rem; }
+  .rent { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .rent-photo {
+    display: grid; place-items: center; width: 240px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; margin-bottom: 22px;
+    background: radial-gradient(80% 70% at 50% 45%, #fff, #e3e9f2); border: 1px solid var(--line);
+    box-shadow: 0 24px 60px -30px rgb(26 111 224 / .5), 0 0 0 8px var(--accent-soft);
+  }
+  .rent-photo :global(img) { width: 78%; height: 78%; object-fit: contain; mix-blend-mode: multiply; }
+  .rent h2 { font-size: 1.35rem; margin-bottom: 8px; }
+  .rent-desc { color: var(--muted); margin-bottom: 14px; }
+  .rent .specs { justify-content: center; }
+  .rent-price { font: 700 1.1rem var(--display); margin: 0 0 14px; }
+  @media (max-width: 700px) {
+    .rent-list { grid-template-columns: minmax(0, 340px); gap: 56px; }
+    .rent-photo { width: 210px; }
+  }
+</style>

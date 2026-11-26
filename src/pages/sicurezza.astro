@@ -16,11 +16,23 @@ const icons = {
 
 // Video: link YouTube → riquadro incorporato (senza cookie), file → lettore video
 const youtubeId = (url) => url.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/)?.[1];
+// Pagina non ancora pronta: mostra solo "Prossimamente". Mettere false per pubblicare il contenuto qui sotto.
+const inArrivo = true;
 ---
 <Layout
   title="Sicurezza: guidare il monopattino in sicurezza — Monopattini.ch"
   description="Le regole per i monopattini elettrici in Svizzera e come comportarsi nelle situazioni di tutti i giorni, per guidare in sicurezza e rispettare pedoni e automobilisti."
 >
+  {inArrivo ? (
+    <section class="section page-top soon">
+      <div class="wrap">
+        <p class="eyebrow">Sicurezza</p>
+        <h1 class="page-title">Prossimamente</h1>
+        <p class="sub">Stiamo preparando una guida per usare il monopattino in sicurezza: le regole in Svizzera, le situazioni di tutti i giorni, i consigli per i genitori e un quiz.</p>
+      </div>
+    </section>
+  ) : (
+  <Fragment>
   <section class="section page-top">
     <div class="wrap sz-intro">
       <p class="eyebrow">Sicurezza</p>
@@ -125,6 +137,8 @@ const youtubeId = (url) => url.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/)?.
         Queste informazioni sono un aiuto e non sostituiscono la legge: in caso di dubbio fanno fede le norme ufficiali.</p>
     </div>
   </section>
+  </Fragment>
+  )}
 </Layout>
 
 <script>

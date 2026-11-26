@@ -328,3 +328,19 @@ export const repairSteps = [
   { title: 'Riparazione', text: 'Ripariamo con ricambi di qualità, solo dopo il tuo ok.' },
   { title: 'Ritiro', text: 'Ti avvisiamo appena è pronto, testato e sicuro.' },
 ];
+
+// Noleggio (pagina Noleggia): ogni monopattino ha qui tutti i suoi dati, indipendenti da quelli in vendita.
+//   photo  file in src/assets/   prezzo  testo libero (es. 'CHF 25.– al giorno'); null = "Prezzo su richiesta"
+//   TODO: descrizioni e prezzi segnaposto, da confermare
+export const rentals = [
+  {
+    model: 'Xiaomi Mi 4 Pro (2nd Gen)', photo: 'xiaomi-4-pro-1.png', prezzo: null,
+    descrizione: 'Comodo e stabile, con gomme tubeless da 10" e fino a 60 km di autonomia. Ideale per muoversi in città tutto il giorno.',
+    dati: [['Autonomia', '60 km'], ['Velocità', '20 km/h'], ['Ruote', '10"']],
+  },
+  {
+    model: 'Xiaomi Mi 5', photo: 'xiaomi-5-1.png', prezzo: null,
+    descrizione: 'Il modello più recente, con sospensione anteriore e 60 km di autonomia. Perfetto per gite più lunghe e strade meno lisce.',
+    dati: [['Autonomia', '60 km'], ['Velocità', '20 km/h'], ['Ruote', '10"']],
+  },
+];
