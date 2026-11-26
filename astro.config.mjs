@@ -6,5 +6,7 @@ export default defineConfig({
   redirects: {
     '/usato': '/compra',
     '/usato/[slug]': '/compra/[slug]',
+    // pagina Vendi tolta: chi ha il vecchio link arriva in home
+    '/vendi': '/',
   },
 });
